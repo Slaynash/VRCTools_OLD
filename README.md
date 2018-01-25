@@ -25,7 +25,7 @@ Before install:
 
 Installation:
 1. Make a backup of DLL_DIR/Assembly-CSharp.dll
-2. Copy the files Assembly-CSharp.dll and VRCTools.dll located in bin/ to DLL_DIR/ (replace files if asked)
+2. Copy the files Assembly-CSharp.dll and VRCTools.dll located in bin/Release/ to DLL_DIR/ (replace files if asked)
 
 Disclaimer:
 -------
@@ -34,3 +34,8 @@ Disclaimer:
 I am not affiliated with VRChat.
 This content is for entertainment purpose only, and is provided "AS IS".
 I am not responsible of any legal prejudice agaist VRChat, the VRChat team, VRChat community or legals prejudice done with an edited version of this code.
+
+Note for the VRChat Team
+-------
+
+If you have any request, please send a mail at hugoflores@hotmail.fr
