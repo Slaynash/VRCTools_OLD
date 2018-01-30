@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VRCTools
 {
@@ -39,7 +35,7 @@ namespace VRCTools
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Console.WriteLine(((Exception)e.ExceptionObject).Message);
+            Error(((Exception)e.ExceptionObject).Message);
         }
 
         public static void Info(string str)

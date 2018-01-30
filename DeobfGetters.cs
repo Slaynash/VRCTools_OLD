@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VRC.Core;
+﻿using VRC.Core;
 
 namespace VRCTools
 {
@@ -18,6 +13,16 @@ namespace VRCTools
         public static QuickMenu GetQuickMenu_Instance()
         {
             return QuickMenu.GDNHBPCMDKG;
+        }
+
+        public static AGOPCCNOLCC getCurrentUser()
+        {
+            return AGOPCCNOLCC.HAFAJICOBKH;
+        }
+
+        public static ApiAvatar getApiAvatar()
+        {
+            return getCurrentUser().PDOLEEGKCGH;
         }
     }
 }

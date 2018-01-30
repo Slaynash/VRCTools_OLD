@@ -10,10 +10,12 @@ Discord RichPresence:
   - world type (public/friends+/friends/private)
   - users and max users in instance
 
+Favorite avatars list
+  - you can add the weared avatar to favorite by pressing middle click button
+  - favorited avatars appear in the "Personal" list
 Upcoming features:
 -------
 
-Favorite avatars list
 
 Installation
 -------

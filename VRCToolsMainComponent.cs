@@ -6,8 +6,9 @@ namespace VRCTools {
         public void Awake() {
             VRCToolsLogger.Info("Initialising...");
 
-            VRCToolsLogger.Init(false); //change this to true if you want to see the VRCTools output console
+            VRCToolsLogger.Init(true);
             DiscordLoader.Init();
+            AvatarUtils.Init();
             DontDestroyOnLoad(this);
 
             VRCToolsLogger.Info("Initialised successfully !");
@@ -16,6 +17,8 @@ namespace VRCTools {
         public void Update() {
 
             DiscordLoader.Update();
+
+            AvatarUtils.Update();
 
         }
     }
