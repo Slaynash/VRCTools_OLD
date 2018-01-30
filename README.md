@@ -11,7 +11,7 @@ Discord RichPresence:
   - users and max users in instance
 
 Favorite avatars list
-  - you can add the weared avatar to favorite by pressing O and remove the weared avatar by pressing P
+  - you can add the weared avatar to favorite by pressing P and remove the weared avatar by pressing O
   - favorited avatars appear in the "Personal" list
 
 Upcoming features:
