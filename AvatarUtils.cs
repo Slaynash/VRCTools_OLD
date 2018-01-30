@@ -23,7 +23,7 @@ namespace VRCTools
 
                 if (DeobfGetters.GetQuickMenu_Instance() == null) return;
 
-                if (Input.GetKeyDown("Q"))
+                if (Input.GetKeyDown("O"))
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
                     if (apiAvatar1 == null)
@@ -56,7 +56,7 @@ namespace VRCTools
                         error => Console.WriteLine("Unable to add avatar to favorites: "+error)
                     );
                 }
-                if (Input.GetKeyDown("R"))
+                if (Input.GetKeyDown("P"))
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
                     if (apiAvatar1 == null)
