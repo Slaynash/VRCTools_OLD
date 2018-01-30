@@ -28,7 +28,7 @@ Before install:
 
 Installation:
 1. Make a backup of DLL_DIR/Assembly-CSharp.dll
-2. Copy the files [Assembly-CSharp.dll](https://github.com/Slaynash/VRCTools/raw/master/bin/Release/Assembly-CSharp.dll) and [VRCTools.dll](https://github.com/Slaynash/VRCTools/raw/master/bin/Release/VRCTools.dll) located in bin/Release/ to DLL_DIR/ (replace files if asked)
+2. Copy the files [Assembly-CSharp.dll](https://github.com/Slaynash/VRCTools/raw/master/bin/Release/Assembly-CSharp.dll), [VRCTools.dll](https://github.com/Slaynash/VRCTools/raw/master/bin/Release/VRCTools.dll) and [discord-rpc.dll](https://github.com/Slaynash/VRCTools/raw/master/bin/Release/discord-rpc.dll) located in bin/Release/ to DLL_DIR/ (replace files if asked)
 
 Disclaimer:
 ---

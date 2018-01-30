@@ -5,4 +5,5 @@ bin/*
 bin/Release/*
 !/bin/Release/VRCTools.dll
 !/bin/Release/Assembly-CSharp.dll
+!/bin/Release/discord-rpc.dll
 *.csproj

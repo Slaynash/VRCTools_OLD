@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Threading;
 using VRC.Core;
-using static DiscordRpc;
 using static VRC.Core.ApiWorld.WorldInstance;
 
 namespace VRCTools
 {
     public abstract class DiscordLoader
     {
-        private static RichPresence presence;
+        private static DiscordRpc.RichPresence presence;
 
         public static ApiWorld CurrentWorld { get; private set; }
 
         public static void Init()
         {
             VRCToolsLogger.Info("[DRPC] Initialising...");
-            EventHandlers eh = new EventHandlers();
+            DiscordRpc.EventHandlers eh = new DiscordRpc.EventHandlers();
 
             presence.state = "Not in a world";
             presence.partySize = 0;
@@ -23,10 +22,9 @@ namespace VRCTools
             presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "Desktop" : "VR") + ")";
             presence.largeImageKey = "logo";
 
-            Initialize("404400696171954177", ref eh, true, null);
-            UpdatePresence(ref presence);
-
             Thread t = new Thread(new ThreadStart(() => {
+
+                DiscordRpc.Initialize("404400696171954177", ref eh, true, null);
                 while (true)
                 {
                     Update();
@@ -83,7 +81,7 @@ namespace VRCTools
                 presence.partyMax = 0;
             }
 
-            UpdatePresence(ref presence);
+            DiscordRpc.UpdatePresence(ref presence);
         }
 
     }
