@@ -7,22 +7,22 @@ namespace VRCTools
 
         public static bool IsVRLaunched()
         {
-            return VRCApplicationSetup.FPPKEHEAFCL;
+            return VRCApplicationSetup.CMEDFFCILEL;
         }
 
         public static QuickMenu GetQuickMenu_Instance()
         {
-            return QuickMenu.GDNHBPCMDKG;
+            return QuickMenu.NOOINPMKCGJ;
         }
 
-        public static AGOPCCNOLCC getCurrentUser()
+        public static JPLKNHJDLPC getCurrentUser()
         {
-            return AGOPCCNOLCC.HAFAJICOBKH;
+            return JPLKNHJDLPC.GAJAPPAMDGI;
         }
 
         public static ApiAvatar getApiAvatar()
         {
-            return getCurrentUser().PDOLEEGKCGH;
+            return getCurrentUser().MLFHCHFGJKE;
         }
     }
 }

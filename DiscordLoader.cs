@@ -25,6 +25,7 @@ namespace VRCTools
             Thread t = new Thread(new ThreadStart(() => {
 
                 DiscordRpc.Initialize("404400696171954177", ref eh, true, null);
+
                 while (true)
                 {
                     Update();
