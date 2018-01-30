@@ -1,14 +1,36 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour {
 
+        bool discordInit = false;
+        bool avatarInit = false;
+
         public void Awake() {
-            VRCToolsLogger.Info("Initialising...");
+            VRCToolsLogger.Info("Initialising VRCTools 180130-1821");
 
             VRCToolsLogger.Init(true);
-            DiscordLoader.Init();
-            AvatarUtils.Init();
+            try
+            {
+                DiscordLoader.Init();
+                discordInit = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occured during the initialisation of DRPC:");
+                Console.WriteLine(e);
+            }
+            try
+            {
+                AvatarUtils.Init();
+                avatarInit = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occured during the initialisation of DRPC:");
+                Console.WriteLine(e);
+            }
             DontDestroyOnLoad(this);
 
             VRCToolsLogger.Info("Initialised successfully !");
@@ -16,9 +38,9 @@ namespace VRCTools {
 
         public void Update() {
 
-            DiscordLoader.Update();
+            if(discordInit) DiscordLoader.Update();
 
-            AvatarUtils.Update();
+            if(avatarInit) AvatarUtils.Update();
 
         }
     }
