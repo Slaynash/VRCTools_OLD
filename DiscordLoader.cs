@@ -70,7 +70,7 @@ namespace VRCTools
                 }
             }
 
-            if(world != null && world.currentInstanceAccess != AccessType.InviteOnly)
+            if(world != null && world.currentInstanceAccess != AccessType.InviteOnly && world.currentInstanceAccess != AccessType.InvitePlus)
             {
                 presence.partySize = VRC.PlayerManager.GetAllPlayers().Length;
                 presence.partyMax = world.capacity;
