@@ -48,14 +48,13 @@ namespace VRCTools
                 CurrentWorld = world;
                 if (world != null)
                 {
-                    if (world.currentInstanceAccess == AccessType.InviteOnly)
-                        presence.state = "in a private world";
-                    else
-                        presence.state = "in " + world.name + " #" + world.currentInstanceIdOnly + " " + (
-                            world.currentInstanceAccess == AccessType.FriendsOfGuests ? "[Friends+]" :
-                            world.currentInstanceAccess == AccessType.FriendsOnly ? "[Friends]" :
-                            ""
-                        );
+                    presence.state = "in " + world.name + " #" + world.currentInstanceIdOnly + " " + (
+                        world.currentInstanceAccess == AccessType.FriendsOfGuests ? "[Friends+]" :
+                        world.currentInstanceAccess == AccessType.FriendsOnly ? "[Friends]" :
+                        world.currentInstanceAccess == AccessType.InviteOnly ? "[Invite]" :
+                        world.currentInstanceAccess == AccessType.InvitePlus ? "[Invite+]" :
+                        "[Unknown]"
+                    );
                 }
                 else
                 {

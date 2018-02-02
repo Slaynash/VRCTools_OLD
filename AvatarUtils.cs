@@ -31,32 +31,29 @@ namespace VRCTools
                         VRCToolsLogger.Error("Your avatar couldn't be retrieved. Maybe your Assembly-CSharp.dll is in the wrong version ?");
                         return;
                     }
-                    else
-                    {
-                        Console.WriteLine("apiAvatar1 {0}:", apiAvatar1);
-                        Console.WriteLine("Avatar informations :");
-                        Console.WriteLine("Weared by: {0}", vrcPlayer1.name);
-                        Console.WriteLine("Avatar name: {0}", apiAvatar1.name);
-                        Console.WriteLine("Avatar image url: {0}", apiAvatar1.imageUrl);
-                        Console.WriteLine("Avatar asset url: {0}", apiAvatar1.assetUrl);
-                        Console.WriteLine("Avatar description: {0}", apiAvatar1.description);
-                        Console.WriteLine("Avatar tags: {0}", apiAvatar1.tags.Count);
-                        foreach (String s in apiAvatar1.tags)
-                            Console.WriteLine("- {0} ", s);
-                        Console.WriteLine("Avatar unity package url: {0}", apiAvatar1.unityPackageUrl);
-                    }
-                    Console.WriteLine("Saving avatar...");
                     ApiAvatar av = new ApiAvatar();
                     Boolean f = false;
                     av.Init(DeobfGetters.getCurrentUser(), apiAvatar1.name, apiAvatar1.imageUrl, apiAvatar1.assetUrl, apiAvatar1.description, apiAvatar1.tags, apiAvatar1.unityPackageUrl);
                     foreach (String s in av.tags) if (s == "favorite") { f = true; break; }
-                    if (!f) av.tags.Add("favorite");
-                    av.Save(
-                        succes => Console.WriteLine("Avatar added to favorites succesfully"),
-                        error => Console.WriteLine("Unable to add avatar to favorites: "+error)
-                    );
+                    if (!f)
+                    {
+                        VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
+                        VRCToolsLogger.Info("Description: " + apiAvatar1.description);
+
+                        apiAvatar1.tags.Add("favorite");
+                        av.tags.Add("favorite");
+                        av.Save(
+                            succes => VRCToolsLogger.Info("Avatar added to favorites succesfully"),
+                            error => VRCToolsLogger.Info("Unable to add avatar to favorites: " + error)
+                        );
+                    }
+                    else
+                    {
+                        VRCToolsLogger.Info("This avatar is already in favorite list");
+                    }
                 }
-                if (Input.GetKeyDown(KeyCode.P))
+                /*
+                if (Input.GetKeyDown(KeyCode.P)) 
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
                     if (apiAvatar1 == null)
@@ -80,6 +77,7 @@ namespace VRCTools
                         }
                     }
                 }
+                */
 
             }
             catch (Exception e) {
