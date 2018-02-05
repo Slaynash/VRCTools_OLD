@@ -53,7 +53,7 @@ namespace VRCTools
                         world.currentInstanceAccess == AccessType.FriendsOnly ? "[Friends]" :
                         world.currentInstanceAccess == AccessType.InviteOnly ? "[Invite]" :
                         world.currentInstanceAccess == AccessType.InvitePlus ? "[Invite+]" :
-                        "[Unknown]"
+                        "" // AccessType.Public
                     );
                 }
                 else

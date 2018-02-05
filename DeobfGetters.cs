@@ -1,4 +1,6 @@
-﻿using VRC.Core;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using VRC.Core;
 
 namespace VRCTools
 {
