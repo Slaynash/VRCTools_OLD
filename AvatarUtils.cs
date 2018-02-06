@@ -129,6 +129,16 @@ namespace VRCTools
                 null
             );
             Action<List<object>> sc = new Action<List<object>>((list) => {
+                /*
+                list.ForEach(o => {
+                    Dictionary<String, object> dic = o as Dictionary<String, object>;
+                    foreach (KeyValuePair<string, object> pair in dic)
+                    {
+                        VRCToolsLogger.Info(pair.Key+" : "+pair.Value);
+                    }
+                });
+                */
+                VRCTServerManager.getAvatars();
                 VRCToolsLogger.Info("SendRequest success");
                 successCallback(list);
             });

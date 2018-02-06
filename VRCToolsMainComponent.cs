@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VRCTools {
@@ -11,6 +12,7 @@ namespace VRCTools {
             VRCToolsLogger.Info("Initialising VRCTools 180202-1759 for Build 507");
 
             VRCToolsLogger.Init(true);
+
             try
             {
                 DiscordLoader.Init();
