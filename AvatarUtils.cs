@@ -138,7 +138,7 @@ namespace VRCTools
                     }
                 });
                 */
-                VRCTServerManager.getAvatars();
+                list.AddRange(VRCTServerManager.getAvatars());
                 VRCToolsLogger.Info("SendRequest success");
                 successCallback(list);
             });

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using VRC;
+using VRC.Core;
 
 namespace VRCTools
 {
@@ -15,14 +18,14 @@ namespace VRCTools
 		public string authorId;
         public string assetUrl;
 		public string description;
-		//public string[] tags;
-		public string version;
+		public string[] tags;
+		public double version;
         public string unityPackageUrl;
         public string thumbnailImageUrl;
 
         public SerializableApiAvatar() { }
 
-        public SerializableApiAvatar(string id, string name, string imageUrl, string authorName, string authorId, string assetUrl, string description, List<string> tags, string version, string unityPackageUrl, string thumbnailImageUrl)
+        public SerializableApiAvatar(string id, string name, string imageUrl, string authorName, string authorId, string assetUrl, string description, List<string> tags, int version, string unityPackageUrl, string thumbnailImageUrl)
         {
             this.id = id;
             this.name = name;
@@ -31,7 +34,7 @@ namespace VRCTools
             this.authorId = authorId;
             this.assetUrl = assetUrl;
             this.description = description;
-            //this.tags = tags.ToArray();
+            this.tags = tags.ToArray();
             this.version = version;
             this.unityPackageUrl = unityPackageUrl;
             this.thumbnailImageUrl = thumbnailImageUrl;
@@ -48,7 +51,7 @@ namespace VRCTools
             dic.Add("authorId", authorId);
             dic.Add("assetUrl", assetUrl);
             dic.Add("description", description);
-            dic.Add("tags", "favorite");
+            dic.Add("tags", new List<object>(tags));
             dic.Add("version", version);
             dic.Add("unityPackageUrl", unityPackageUrl);
             dic.Add("thumbnailImageUrl", thumbnailImageUrl);
