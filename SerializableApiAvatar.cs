@@ -23,8 +23,6 @@ namespace VRCTools
         public string unityPackageUrl;
         public string thumbnailImageUrl;
 
-        public SerializableApiAvatar() { }
-
         public SerializableApiAvatar(string id, string name, string imageUrl, string authorName, string authorId, string assetUrl, string description, List<string> tags, int version, string unityPackageUrl, string thumbnailImageUrl)
         {
             this.id = id;
@@ -51,7 +49,9 @@ namespace VRCTools
             dic.Add("authorId", authorId);
             dic.Add("assetUrl", assetUrl);
             dic.Add("description", description);
-            dic.Add("tags", new List<object>(tags));
+            List<object> tagList = new List<object>();
+            tagList.AddRange(tags);
+            dic.Add("tags", tagList);
             dic.Add("version", version);
             dic.Add("unityPackageUrl", unityPackageUrl);
             dic.Add("thumbnailImageUrl", thumbnailImageUrl);
@@ -59,7 +59,7 @@ namespace VRCTools
             return dic;
         }
 
-        public static List<SerializableApiAvatar> parseJson(String json)
+        public static List<SerializableApiAvatar> ParseJson(String json)
         {
 
             List<SerializableApiAvatar> saa = new List<SerializableApiAvatar>();
@@ -73,6 +73,37 @@ namespace VRCTools
                 saa.Add(JsonUtility.FromJson<SerializableApiAvatar>(m.Value));
             }
             return saa;
+        }
+
+        public string AsJson()
+        {
+
+            string tagsS = "[";
+            bool first = true;
+            foreach(string tag in tags)
+            {
+                if (!first) tagsS += ",";
+                tagsS += "\"" + tag + "\"";
+                first = false;
+            }
+            tagsS += "]";
+
+            string jsonString =
+                "{" +
+                    "\"id\":\"" + id + "\"," +
+                    "\"name\":\"" + name + "\"," +
+                    "\"imageUrl\":\"" + imageUrl + "\"," +
+                    "\"authorName\":\"" + authorName + "\"," +
+                    "\"authorId\":\"" + authorId + "\"," +
+                    "\"assetUrl\":\"" + assetUrl + "\"," +
+                    "\"description\":\"" + description + "\"," +
+                    "\"tags\":" + tagsS + "," +
+                    "\"version\":\"" + version + "\"," +
+                    "\"unityPackageUrl\":\"" + unityPackageUrl + "\"," +
+                    "\"thumbnailImageUrl\":\"" + thumbnailImageUrl + "\"" +
+                "}";
+
+            return jsonString;
         }
     }
 }

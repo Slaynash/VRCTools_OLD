@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using VRC.Core;
 
 namespace VRCTools
 {
@@ -26,7 +27,7 @@ namespace VRCTools
             return true;
         }
 
-        public static List<object> getAvatars()
+        public static List<object> GetAvatars()
         {
             List<object> avatars = new List<object>();
 
@@ -49,7 +50,7 @@ namespace VRCTools
             }
 
             VRCToolsLogger.Info(response.data);
-            List<SerializableApiAvatar> serializedAvatars = SerializableApiAvatar.parseJson(response.data);
+            List<SerializableApiAvatar> serializedAvatars = SerializableApiAvatar.ParseJson(response.data);
             foreach(SerializableApiAvatar serializedAvatar in serializedAvatars)
             {
                 avatars.Add(serializedAvatar.getDictionary());
@@ -85,6 +86,32 @@ namespace VRCTools
             return text;
         }
 
+        internal static bool AddAvatar(ApiAvatar apiAvatar)
+        {
+            SerializableApiAvatar avatar = new SerializableApiAvatar(
+                apiAvatar.id,
+                apiAvatar.name,
+                apiAvatar.imageUrl,
+                apiAvatar.authorName,
+                apiAvatar.authorId,
+                apiAvatar.assetUrl,
+                apiAvatar.description,
+                apiAvatar.tags,
+                apiAvatar.version,
+                apiAvatar.unityPackageUrl,
+                apiAvatar.thumbnailImageUrl
+            );
 
+            Send(new VRCTRequest("ADD", avatar.AsJson()).AsJson());
+            VRCToolsLogger.Info("sent !");
+            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
+            if (response.returncode != ReturnCodes.SUCCESS)
+            {
+                VRCToolsLogger.Error("Unable to add avatar to favorites: error " + response.returncode);
+                return false;
+            }
+            VRCToolsLogger.Info("Avatar added to favorites sucessfully");
+            return true;
+        }
     }
 }

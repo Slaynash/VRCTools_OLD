@@ -55,6 +55,37 @@ namespace VRCTools
                         VRCToolsLogger.Info("This avatar is already in favorite list");
                     }
                 }
+                if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
+                {
+                    ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
+                    if (apiAvatar1 == null)
+                    {
+                        VRCToolsLogger.Error("Your avatar couldn't be retrieved. Maybe your Assembly-CSharp.dll is in the wrong version ?");
+                        return;
+                    }
+                    Boolean f = false;
+                    foreach (String s in apiAvatar1.tags) if (s == "favorite") { f = true; break; }
+                    if (!f)
+                    {
+                        VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
+                        VRCToolsLogger.Info("Description: " + apiAvatar1.description);
+
+                        apiAvatar1.tags.Add("favorite");
+
+                        VRCTServerManager.AddAvatar(apiAvatar1);
+                        /*
+                        av.Save(
+                            succes => VRCToolsLogger.Info("Avatar added to favorites succesfully"),
+                            error => VRCToolsLogger.Info("Unable to add avatar to favorites: " + error)
+                        );
+                        */
+
+                    }
+                    else
+                    {
+                        VRCToolsLogger.Info("This avatar is already in favorite list");
+                    }
+                }
                 /*
                 if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I))
                 {
@@ -138,7 +169,7 @@ namespace VRCTools
                     }
                 });
                 */
-                list.AddRange(VRCTServerManager.getAvatars());
+                list.AddRange(VRCTServerManager.GetAvatars());
                 VRCToolsLogger.Info("SendRequest success");
                 successCallback(list);
             });
