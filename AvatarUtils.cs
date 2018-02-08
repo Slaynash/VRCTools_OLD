@@ -24,38 +24,7 @@ namespace VRCTools
                 VRCPlayer vrcPlayer1 = PlayerManager.GetCurrentPlayer().vrcPlayer;
 
                 if (DeobfGetters.GetQuickMenu_Instance() == null) return;
-
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.O))
-                {
-                    ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
-                    if (apiAvatar1 == null)
-                    {
-                        VRCToolsLogger.Error("Your avatar couldn't be retrieved. Maybe your Assembly-CSharp.dll is in the wrong version ?");
-                        return;
-                    }
-                    ApiAvatar av = new ApiAvatar();
-                    Boolean f = false;
-                    av.Init(DeobfGetters.getCurrentUser(), apiAvatar1.name, apiAvatar1.imageUrl, apiAvatar1.assetUrl, apiAvatar1.description, apiAvatar1.tags, apiAvatar1.unityPackageUrl);
-                    foreach (String s in av.tags) if (s == "favorite") { f = true; break; }
-                    if (!f)
-                    {
-                        VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
-                        VRCToolsLogger.Info("Description: " + apiAvatar1.description);
-
-                        apiAvatar1.tags.Add("favorite");
-                        av.tags.Add("favorite");
-                        av.Save(
-                            succes => VRCToolsLogger.Info("Avatar added to favorites succesfully"),
-                            error => VRCToolsLogger.Info("Unable to add avatar to favorites: " + error)
-                        );
-                        
-                    }
-                    else
-                    {
-                        VRCToolsLogger.Info("This avatar is already in favorite list");
-                    }
-                }
-                if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
                     if (apiAvatar1 == null)
@@ -73,12 +42,6 @@ namespace VRCTools
                         apiAvatar1.tags.Add("favorite");
 
                         VRCTServerManager.AddAvatar(apiAvatar1);
-                        /*
-                        av.Save(
-                            succes => VRCToolsLogger.Info("Avatar added to favorites succesfully"),
-                            error => VRCToolsLogger.Info("Unable to add avatar to favorites: " + error)
-                        );
-                        */
 
                     }
                     else
@@ -86,7 +49,7 @@ namespace VRCTools
                         VRCToolsLogger.Info("This avatar is already in favorite list");
                     }
                 }
-                /*
+                /* (debug)
                 if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I))
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
@@ -114,7 +77,7 @@ namespace VRCTools
                     Console.WriteLine("Avatar platform: {0}", apiAvatar1.platform);
                 }
                 */
-                /*
+                /* upcomming (not yet implemented)
                 if (Input.GetKeyDown(KeyCode.P)) 
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
@@ -150,8 +113,6 @@ namespace VRCTools
 
         public static void FetchFavList(string endpoint, HTTPMethods method, Dictionary<string, string> requestParams, Action<List<object>> successCallback, Action<string> errorCallback, bool needsAPIKey, bool authenticationRequired, float cacheLifetime)
         {
-            VRCToolsLogger.Info("FetchFavList v2");
-
             MethodInfo m = typeof(ApiModel).GetMethod(
                 "SendRequest",
                 BindingFlags.Static | BindingFlags.NonPublic,
@@ -160,21 +121,10 @@ namespace VRCTools
                 null
             );
             Action<List<object>> sc = new Action<List<object>>((list) => {
-                /*
-                list.ForEach(o => {
-                    Dictionary<String, object> dic = o as Dictionary<String, object>;
-                    foreach (KeyValuePair<string, object> pair in dic)
-                    {
-                        VRCToolsLogger.Info(pair.Key+" : "+pair.Value);
-                    }
-                });
-                */
                 list.AddRange(VRCTServerManager.GetAvatars());
-                VRCToolsLogger.Info("SendRequest success");
                 successCallback(list);
             });
             Action<string> ec = new Action<string>((error) => {
-                VRCToolsLogger.Info("SendRequest error");
                 errorCallback(error);
             });
             
@@ -184,7 +134,7 @@ namespace VRCTools
 
 
 
-        /*
+        /* Interface (todo)
         UiAvatarList favList = listGameObject.AddComponent(typeof(UiAvatarList)) as UiAvatarList;
         favList.category = (UiAvatarList.AGDKGNJJFMA)3;
         favList.name = "favoriteList";

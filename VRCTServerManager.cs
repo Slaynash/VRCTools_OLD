@@ -20,7 +20,6 @@ namespace VRCTools
         private static bool Init()
         {
             client = new TcpClient(SERVER_IP, PORT_NO);
-            //client.ReceiveTimeout = 1000;
             if (!client.Connected) return false;
             nwStream = client.GetStream();
             Thread.Sleep(100);
@@ -36,9 +35,7 @@ namespace VRCTools
                 if(!Init()) return avatars;
 
             VRCTRequest request = new VRCTRequest("GET", "");
-            VRCToolsLogger.Info("Sending...");
             Send(request.AsJson());
-            VRCToolsLogger.Info("receiving...");
             String received = Receive();
             VRCToolsLogger.Info(received);
 
@@ -55,16 +52,6 @@ namespace VRCTools
             {
                 avatars.Add(serializedAvatar.getDictionary());
             }
-
-            VRCToolsLogger.Info("done !");
-
-            //1. request
-            //2. parse response to VRCTResponse
-            //3. parse response data to list of avatars
-            //4. parse avatars to Dictionary<string, object>
-
-            //JsonUtility.FromJson<VRCTResponse>(response)
-            //JsonUtility.FromJson<SerializableApiAvatar>(avatars);
 
             return avatars;
         }
@@ -88,6 +75,9 @@ namespace VRCTools
 
         internal static bool AddAvatar(ApiAvatar apiAvatar)
         {
+            if (client == null || !client.Connected)
+                if (!Init()) return false;
+
             SerializableApiAvatar avatar = new SerializableApiAvatar(
                 apiAvatar.id,
                 apiAvatar.name,
@@ -103,7 +93,6 @@ namespace VRCTools
             );
 
             Send(new VRCTRequest("ADD", avatar.AsJson()).AsJson());
-            VRCToolsLogger.Info("sent !");
             VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
             if (response.returncode != ReturnCodes.SUCCESS)
             {
