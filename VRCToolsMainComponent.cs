@@ -8,7 +8,7 @@ namespace VRCTools {
         bool avatarInit = false;
 
         public void Awake() {
-            VRCToolsLogger.Info("Initialising VRCTools 180202-1759 for Build 507");
+            VRCToolsLogger.Info("Initialising VRCTools 180209-1758 for Build 507");
 
             VRCToolsLogger.Init(true);
 
