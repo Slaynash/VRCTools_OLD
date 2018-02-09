@@ -8,9 +8,10 @@ namespace VRCTools {
         bool avatarInit = false;
 
         public void Awake() {
-            VRCToolsLogger.Info("Initialising VRCTools 180202-1759 for Build 507");
+            VRCToolsLogger.Info("Initialising VRCTools 180209-1758 for Build 507");
 
             VRCToolsLogger.Init(true);
+
             try
             {
                 DiscordLoader.Init();
@@ -43,5 +44,13 @@ namespace VRCTools {
             if(avatarInit) AvatarUtils.Update();
 
         }
+
+        /* Upcoming - DLL Injector
+        public static void LoadLibraryA()
+        {
+            UnityEngine.Debug.Log("DLLInject");
+            System.Windows.Forms.MessageBox.Show("You kiddo are going to have a very bad time");
+        }
+        */
     }
 }
