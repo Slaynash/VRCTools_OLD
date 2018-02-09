@@ -44,5 +44,13 @@ namespace VRCTools {
             if(avatarInit) AvatarUtils.Update();
 
         }
+
+        /* Upcoming - DLL Injector
+        public static void LoadLibraryA()
+        {
+            UnityEngine.Debug.Log("DLLInject");
+            System.Windows.Forms.MessageBox.Show("You kiddo are going to have a very bad time");
+        }
+        */
     }
 }

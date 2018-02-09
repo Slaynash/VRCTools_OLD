@@ -5,16 +5,14 @@ using UnityEngine;
 using VRC;
 using VRC.Core;
 using VRC.Core.BestHTTP;
+using VRC.UI;
 
 namespace VRCTools
 {
     public abstract class AvatarUtils
     {
 
-        public static void Init()
-        {
-            
-        }
+        public static void Init() { }
 
         public static void Update()
         {
@@ -77,7 +75,7 @@ namespace VRCTools
                     Console.WriteLine("Avatar platform: {0}", apiAvatar1.platform);
                 }
                 */
-                /* upcomming (not yet implemented)
+                /* upcoming - avatar remove
                 if (Input.GetKeyDown(KeyCode.P)) 
                 {
                     ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
@@ -133,12 +131,62 @@ namespace VRCTools
         }
 
 
-
-        /* Interface (todo)
+        // UPCOMING - Favorite list in the avatar tab
+        public static void InjectFavList(PageAvatar pageAvatar) {}
+        /* old
         UiAvatarList favList = listGameObject.AddComponent(typeof(UiAvatarList)) as UiAvatarList;
         favList.category = (UiAvatarList.AGDKGNJJFMA)3;
         favList.name = "favoriteList";
         favList.hideWhenEmpty = false;
+        */
+        /*
+        private static bool runned = false;
+        public static void InjectFavList(PageAvatar pageAvatar)
+        {
+            if (!runned)
+            {
+                Console.WriteLine("HHHHMMMMMMM SOOOO GOOOOOOD !!!!");
+
+                UiAvatarList[] uiAvatarList = DeobfGetters.GetAvatarLists(pageAvatar);
+
+                UiAvatarList[] tmpList = new UiAvatarList[uiAvatarList.Length + 1];
+                for (int i = 0; i < uiAvatarList.Length; i++)
+                {
+                    tmpList[i] = uiAvatarList[i];
+                }
+
+                VRCToolsLogger.Info("SimpleAvatarPedestal: " + uiAvatarList[0].avatarPedestal);
+                //empty by default //VRCToolsLogger.Info("devPaginatedLists (size): " + uiAvatarList[0].devPaginatedLists.Count);
+                VRCToolsLogger.Info("category: " + uiAvatarList[0].category);
+                VRCToolsLogger.Info("heading: " + uiAvatarList[0].heading);
+                VRCToolsLogger.Info("order: " + uiAvatarList[0].order);
+                VRCToolsLogger.Info("scrollRect: " + uiAvatarList[0].scrollRect);
+                VRCToolsLogger.Info("scrollRect: " + uiAvatarList[0].scrollRect);
+
+
+
+                try
+                {
+                    tmpList[uiAvatarList.Length] = CreateFavList(pageAvatar);
+                    foreach (UiAvatarList a in uiAvatarList) a.myPage = pageAvatar;
+
+                    DeobfGetters.SetAvatarLists(pageAvatar, tmpList);
+                }
+                catch(Exception e)
+                {
+                    VRCToolsLogger.Error(e.ToString());
+                }
+                runned = true;
+            }
+        }
+
+        private static UiAvatarList CreateFavList(PageAvatar pageAvatar)
+        {
+            UiAvatarList favList = pageAvatar.gameObject.AddComponent<UiAvatarList>();
+            favList.name = "Favorite Avatar List";
+
+            return favList;
+        }
         */
     }
 }

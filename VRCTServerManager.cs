@@ -11,7 +11,7 @@ namespace VRCTools
 {
     class VRCTServerManager
     {
-        private const string SERVER_IP = "127.0.0.1";
+        private const string SERVER_IP = "survival-machines.fr";
         private const int PORT_NO = 26341;
 
         private static TcpClient client;
