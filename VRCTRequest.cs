@@ -13,7 +13,10 @@ namespace VRCTools
 
         public VRCTRequest(string type, string data)
         {
-            this.username = DeobfGetters.getCurrentUser().id;
+            CNPCKMCHMPP cu = DeobfGetters.getCurrentUser();
+            if (cu != null)
+                this.username = cu.id;
+            else this.username = "usr_none";
             this.type = type;
             this.data = data;
         }
