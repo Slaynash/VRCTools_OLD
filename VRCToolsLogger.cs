@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace VRCTools
 {
@@ -17,19 +18,21 @@ namespace VRCTools
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        private static bool errorOccured = false;
+
         public static void Init(bool showConsole)
         {
             if (showConsole)
             {
                 AllocConsole();
-                Console.Title = "VRChat Toolpack by Slaynash";
+                Console.Title = "VRCTools by Slaynash";
                 Console.SetOut(new StreamWriter(Console.OpenStandardOutput())
                 {
                     AutoFlush = true
                 });
                 Console.SetIn(new StreamReader(Console.OpenStandardInput()));
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                Console.WriteLine("VRChat Toolpack by Slaynash");
+                Console.WriteLine("VRCTools by Slaynash");
             }
         }
 
@@ -41,22 +44,42 @@ namespace VRCTools
         public static void Info(string str)
         {
             String tmp = " [VRCTools] " + str;
-            UnityEngine.Debug.Log(tmp);
+            Debug.Log(tmp);
             Console.WriteLine("[Info] " + tmp);
         }
 
         public static void Warn(string str)
         {
             String tmp = " [VRCTools] " + str;
-            UnityEngine.Debug.LogWarning(tmp);
+            Debug.LogWarning(tmp);
             Console.WriteLine("[Warn] " + tmp);
+        }
+
+        public static void Update()
+        {
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
+            {
+                errorOccured = false;
+            }
+        }
+
+        public static int OnGUI(int padding)
+        {
+            if (errorOccured)
+            {
+                GUI.color = Color.red;
+                GUI.Label(new Rect(0, Screen.height - 20 - padding, Screen.width, 20), "VRCTools: An error has occured (Press CTRL+K to hide/show)");
+                return 20;
+            }
+            return 0;
         }
 
         public static void Error(string str)
         {
             String tmp = " [VRCTools] " + str;
-            UnityEngine.Debug.LogError(tmp);
+            Debug.LogError(tmp);
             Console.WriteLine("[Error] " + tmp);
+            errorOccured = true;
         }
     }
 }

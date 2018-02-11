@@ -1,16 +1,26 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour {
 
-        bool discordInit = false;
-        bool avatarInit = false;
+        private bool discordInit = false;
+        private bool avatarInit = false;
+        private bool showUsing = true;
+
+        public static string VRCToolsVersion = "180211-1302";
+        public static string GAMEVERSION = "0.12.0p12:507";
+        public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
         public void Awake() {
-            VRCToolsLogger.Info("Initialising VRCTools 180209-1758 for Build 507");
 
-            VRCToolsLogger.Init(true);
+            VRCToolsLogger.Info("Initialising VRCTools "+ VRCToolsVersion + " for game version "+ GAMEVERSION);
+            VRCTServerManager.Init();
+            VRCTServerManager.GetLastestVersion();
+
+            VRCToolsLogger.Init(false);
+            VRCToolsLogger.Info("Game download path: " + Application.persistentDataPath);
 
             try
             {
@@ -29,19 +39,58 @@ namespace VRCTools {
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error occured during the initialisation of DRPC:");
+                Console.WriteLine("An error occured during the initialisation of AvatarUtils:");
                 Console.WriteLine(e);
             }
             DontDestroyOnLoad(this);
 
             VRCToolsLogger.Info("Initialised successfully !");
+
+            StartCoroutine(ShowUsing());
         }
 
-        public void Update() {
+        private IEnumerator ShowUsing()
+        {
+            yield return new WaitForSeconds(8);
+            showUsing = false;
+        }
 
-            if(discordInit) DiscordLoader.Update();
+        public void Update()
+        {
+            try
+            {
+                VRCTServerManager.Update();
+                VRCToolsLogger.Update();
+                if (discordInit) DiscordLoader.Update();
+                if (avatarInit) AvatarUtils.Update();
+            }
+            catch(Exception e)
+            {
+                VRCToolsLogger.Error(e.ToString());
+            }
 
-            if(avatarInit) AvatarUtils.Update();
+        }
+
+        public void OnGUI()
+        {
+            try {
+                int currentPadding = 0;
+
+                currentPadding += VRCTServerManager.OnGUI(currentPadding);
+                currentPadding += VRCToolsLogger.OnGUI(currentPadding);
+
+                if (showUsing)
+                {
+                    GUI.color = Color.green;
+                    GUI.Label(new Rect(0, Screen.height - 40 - currentPadding, Screen.width, 20), "Using VRCTools "+VERSION);
+                    GUI.Label(new Rect(0, Screen.height - 20 - currentPadding, Screen.width, 20), "Made By Slaynash#2879 (Discord name)");
+                    currentPadding += 40;
+                }
+            }
+            catch (Exception e)
+            {
+                VRCToolsLogger.Error(e.ToString());
+            }
 
         }
 

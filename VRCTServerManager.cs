@@ -12,17 +12,33 @@ namespace VRCTools
     class VRCTServerManager
     {
         private const string SERVER_IP = "survival-machines.fr";
+        //private const string SERVER_IP = "127.0.0.1"; // DEBUG
         private const int PORT_NO = 26341;
 
         private static TcpClient client;
         private static Stream nwStream;
 
-        private static bool Init()
+        private static bool badVersion = false;
+        private static bool hiddenBadVersion = false;
+
+        public static bool Init()
         {
-            client = new TcpClient(SERVER_IP, PORT_NO);
-            if (!client.Connected) return false;
-            nwStream = client.GetStream();
-            Thread.Sleep(100);
+            if (client == null || !client.Connected)
+            {
+                try
+                {
+                    client = new TcpClient(SERVER_IP, PORT_NO);
+                    if (!client.Connected) return false;
+                    nwStream = client.GetStream();
+                    Thread.Sleep(100);
+                }
+                catch (Exception e)
+                {
+                    VRCToolsLogger.Error(e.ToString());
+                    return false;
+                }
+                return true;
+            }
             return true;
         }
 
@@ -31,8 +47,8 @@ namespace VRCTools
             List<object> avatars = new List<object>();
 
             VRCToolsLogger.Info("getAvatars");
-            if (client == null || !client.Connected)
-                if(!Init()) return avatars;
+            
+            if(!Init()) return avatars;
 
             VRCTRequest request = new VRCTRequest("GET", "");
             Send(request.AsJson());
@@ -73,10 +89,9 @@ namespace VRCTools
             return text;
         }
 
-        internal static bool AddAvatar(ApiAvatar apiAvatar)
+        public static bool AddAvatar(ApiAvatar apiAvatar)
         {
-            if (client == null || !client.Connected)
-                if (!Init()) return false;
+            if (!Init()) return false;
 
             SerializableApiAvatar avatar = new SerializableApiAvatar(
                 apiAvatar.id,
@@ -101,6 +116,45 @@ namespace VRCTools
             }
             VRCToolsLogger.Info("Avatar added to favorites sucessfully");
             return true;
+        }
+
+        public static string GetLastestVersion()
+        {
+            if (!Init()) return VRCToolsMainComponent.VERSION;
+
+            VRCTRequest request = new VRCTRequest("GETVERSION", "");
+            Send(request.AsJson());
+            String received = Receive();
+            VRCToolsLogger.Info(received);
+
+            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
+            if (response.data != VRCToolsMainComponent.VERSION)
+            {
+                VRCToolsLogger.Warn("Using older version: " + VRCToolsMainComponent.VERSION + " / " + response.data);
+                badVersion = true;
+                //System.Windows.Forms.MessageBox.Show("Warning: you are not using the lastest version of the mod. Please update to avoid weird bugs");
+            }
+            return response.data;
+        }
+
+        public static void Update()
+        {
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
+            {
+                hiddenBadVersion = !hiddenBadVersion;
+            }
+        }
+
+        public static int OnGUI(int padding)
+        {
+            if (badVersion && !hiddenBadVersion)
+            {
+                GUI.color = Color.yellow;
+                GUI.Label(new Rect(0, Screen.height - 40 - padding, Screen.width, 20), "VRCTools: Update available (Press CTRL+L to hide/show)");
+                GUI.Label(new Rect(0, Screen.height - 20 - padding, Screen.width, 20), "VRCTools: Download updater at https://vrchat.survival-machines.fr/vrctools_updater.jar");
+                return 40;
+            }
+            return 0;
         }
     }
 }
