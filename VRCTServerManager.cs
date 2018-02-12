@@ -89,9 +89,9 @@ namespace VRCTools
             return text;
         }
 
-        public static bool AddAvatar(ApiAvatar apiAvatar)
+        public static int AddAvatar(ApiAvatar apiAvatar)
         {
-            if (!Init()) return false;
+            if (!Init()) return -1;
 
             SerializableApiAvatar avatar = new SerializableApiAvatar(
                 apiAvatar.id,
@@ -112,10 +112,10 @@ namespace VRCTools
             if (response.returncode != ReturnCodes.SUCCESS)
             {
                 VRCToolsLogger.Error("Unable to add avatar to favorites: error " + response.returncode);
-                return false;
+                return response.returncode;
             }
             VRCToolsLogger.Info("Avatar added to favorites sucessfully");
-            return true;
+            return ReturnCodes.SUCCESS;
         }
 
         public static string GetLastestVersion()

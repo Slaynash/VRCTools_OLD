@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -37,14 +38,23 @@ namespace VRCTools
                         VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
                         VRCToolsLogger.Info("Description: " + apiAvatar1.description);
 
-                        apiAvatar1.tags.Add("favorite");
-
-                        VRCTServerManager.AddAvatar(apiAvatar1);
-
+                        int rc = VRCTServerManager.AddAvatar(apiAvatar1);
+                        if(rc == ReturnCodes.SUCCESS)
+                        {
+                            apiAvatar1.tags.Add("favorite");
+                            VRCToolsMainComponent.MessageGUI(Color.green, "Successfully favorited avatar " + apiAvatar1.name, 3);
+                        }
+                        else if(rc == ReturnCodes.AVATAR_ALREADY_IN_FAV)
+                        {
+                            apiAvatar1.tags.Add("favorite");
+                            VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
+                        }
+                        else VRCToolsMainComponent.MessageGUI(Color.red, "Unable to favorite avatar (error "+rc+"): " + apiAvatar1.name, 3);
                     }
                     else
                     {
                         VRCToolsLogger.Info("This avatar is already in favorite list");
+                        VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
                     }
                 }
                 /* (debug)
@@ -108,6 +118,10 @@ namespace VRCTools
             }
         }
 
+        private static IEnumerable MessageAvatarSave(int output, string message)
+        {
+            yield return new WaitForSeconds(3);
+        }
 
         public static void FetchFavList(string endpoint, HTTPMethods method, Dictionary<string, string> requestParams, Action<List<object>> successCallback, Action<string> errorCallback, bool needsAPIKey, bool authenticationRequired, float cacheLifetime)
         {
@@ -129,8 +143,7 @@ namespace VRCTools
             m.Invoke(null, new object[] { "avatars", HTTPMethods.Get, requestParams, null, null, sc, ec, needsAPIKey, authenticationRequired, cacheLifetime });
 
         }
-
-
+        
         // UPCOMING - Favorite list in the avatar tab
         public static void InjectFavList(PageAvatar pageAvatar) {}
         /* old
