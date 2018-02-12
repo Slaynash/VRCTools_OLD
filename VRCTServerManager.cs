@@ -150,8 +150,8 @@ namespace VRCTools
             if (badVersion && !hiddenBadVersion)
             {
                 GUI.color = Color.yellow;
-                GUI.Label(new Rect(0, Screen.height - 40 - padding, Screen.width, 20), "VRCTools: Update available (Press CTRL+L to hide/show)");
-                GUI.Label(new Rect(0, Screen.height - 20 - padding, Screen.width, 20), "VRCTools: Download updater at https://vrchat.survival-machines.fr/vrctools_updater.jar");
+                GUI.Label(new Rect(0, Screen.height - 20 - padding, Screen.width, 20), "VRCTools: Update available (Press CTRL+L to hide/show)");
+                GUI.Label(new Rect(0, Screen.height - padding, Screen.width, 20), "VRCTools: Download updater at https://vrchat.survival-machines.fr/vrctools_updater.jar");
                 return 40;
             }
             return 0;

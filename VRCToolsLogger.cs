@@ -68,7 +68,7 @@ namespace VRCTools
             if (errorOccured)
             {
                 GUI.color = Color.red;
-                GUI.Label(new Rect(0, Screen.height - 20 - padding, Screen.width, 20), "VRCTools: An error has occured (Press CTRL+K to hide/show)");
+                GUI.Label(new Rect(0, Screen.height - padding, Screen.width, 20), "VRCTools: An error has occured (Press CTRL+K to hide/show)");
                 return 20;
             }
             return 0;

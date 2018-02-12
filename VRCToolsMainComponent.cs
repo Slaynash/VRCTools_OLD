@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace VRCTools {
@@ -76,10 +77,10 @@ namespace VRCTools {
         {
             int messageId = nbmessagelast++;
             messagesList.Add(messageId, new GUIMessage(message, color));
-            instance.MessageGUI_internal(messageId, duration);
+            instance.StartCoroutine(MessageGUI_internal(messageId, duration));
         }
 
-        private IEnumerable MessageGUI_internal(int id, int duration)
+        private static IEnumerator MessageGUI_internal(int id, int duration)
         {
             yield return new WaitForSeconds(duration);
             messagesList.Remove(id);
@@ -93,7 +94,7 @@ namespace VRCTools {
                 currentPadding += VRCTServerManager.OnGUI(currentPadding);
                 currentPadding += VRCToolsLogger.OnGUI(currentPadding);
 
-                foreach(KeyValuePair<int, GUIMessage> e in messagesList)
+                foreach(KeyValuePair<int, GUIMessage> e in messagesList.Reverse())
                 {
                     GUI.color = e.Value.color;
                     GUI.Label(new Rect(0, Screen.height - currentPadding, Screen.width, 20), e.Value.message);
