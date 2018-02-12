@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VRCTools {
-    public class VRCToolsMainComponent : MonoBehaviour {
-
-        private bool discordInit = false;
-        private bool avatarInit = false;
-        private bool showUsing = true;
-
+    public class VRCToolsMainComponent : MonoBehaviour
+    {
         public static string VRCToolsVersion = "180211-1302";
         public static string GAMEVERSION = "0.12.0p12:507";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
+        private static VRCToolsMainComponent instance;
+
+        private bool discordInit = false;
+        private bool avatarInit = false;
+        
+        private static int nbmessagelast = 0;
+        private static Dictionary<int, GUIMessage> messagesList = new Dictionary<int, GUIMessage>();
+
         public void Awake() {
+            instance = this;
 
             VRCToolsLogger.Info("Initialising VRCTools "+ VRCToolsVersion + " for game version "+ GAMEVERSION);
             VRCTServerManager.Init();
@@ -46,13 +52,8 @@ namespace VRCTools {
 
             VRCToolsLogger.Info("Initialised successfully !");
 
-            StartCoroutine(ShowUsing());
-        }
-
-        private IEnumerator ShowUsing()
-        {
-            yield return new WaitForSeconds(8);
-            showUsing = false;
+            MessageGUI(Color.green, "Using VRCTools " + VERSION, 8);
+            MessageGUI(Color.green, "Made By Slaynash#2879 (Discord name)", 8);
         }
 
         public void Update()
@@ -71,20 +72,32 @@ namespace VRCTools {
 
         }
 
+        public static void MessageGUI(Color color, string message, int duration)
+        {
+            int messageId = nbmessagelast++;
+            messagesList.Add(messageId, new GUIMessage(message, color));
+            instance.MessageGUI_internal(messageId, duration);
+        }
+
+        private IEnumerable MessageGUI_internal(int id, int duration)
+        {
+            yield return new WaitForSeconds(duration);
+            messagesList.Remove(id);
+        }
+
         public void OnGUI()
         {
             try {
-                int currentPadding = 0;
+                int currentPadding = 20;
 
                 currentPadding += VRCTServerManager.OnGUI(currentPadding);
                 currentPadding += VRCToolsLogger.OnGUI(currentPadding);
 
-                if (showUsing)
+                foreach(KeyValuePair<int, GUIMessage> e in messagesList)
                 {
-                    GUI.color = Color.green;
-                    GUI.Label(new Rect(0, Screen.height - 40 - currentPadding, Screen.width, 20), "Using VRCTools "+VERSION);
-                    GUI.Label(new Rect(0, Screen.height - 20 - currentPadding, Screen.width, 20), "Made By Slaynash#2879 (Discord name)");
-                    currentPadding += 40;
+                    GUI.color = e.Value.color;
+                    GUI.Label(new Rect(0, Screen.height - currentPadding, Screen.width, 20), e.Value.message);
+                    currentPadding += 20;
                 }
             }
             catch (Exception e)
@@ -98,8 +111,20 @@ namespace VRCTools {
         public static void LoadLibraryA()
         {
             UnityEngine.Debug.Log("DLLInject");
-            System.Windows.Forms.MessageBox.Show("You kiddo are going to have a very bad time");
+            System.Windows.Forms.MessageBox.Show("You kiddo are going to have a bad time");
         }
         */
+    }
+
+    internal class GUIMessage
+    {
+        public string message;
+        public Color color;
+
+        public GUIMessage(string message, Color color)
+        {
+            this.message = message;
+            this.color = color;
+        }
     }
 }
