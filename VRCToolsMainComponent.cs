@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -27,7 +28,8 @@ namespace VRCTools {
             VRCTServerManager.GetLastestVersion();
 
             VRCToolsLogger.Init(false);
-            VRCToolsLogger.Info("Game download path: " + Application.persistentDataPath);
+            ChangeCacheFolder();
+            //VRCToolsLogger.Info("Game download path: " + Application.persistentDataPath);
 
             try
             {
@@ -55,6 +57,43 @@ namespace VRCTools {
 
             MessageGUI(Color.green, "Using VRCTools " + VERSION, 8);
             MessageGUI(Color.green, "Made By Slaynash#2879 (Discord name)", 8);
+        }
+
+        private void ChangeCacheFolder()
+        {
+            if (!File.Exists("vrctools_datapath.txt"))
+            {
+                StreamWriter writer = new StreamWriter("vrctools_datapath.txt", true);
+                writer.WriteLine(Application.persistentDataPath);
+                writer.Close();
+            }
+            
+            StreamReader reader = new StreamReader("vrctools_datapath.txt");
+            string targetPath = reader.ReadLine();
+            reader.Close();
+            try
+            {
+                DirectoryInfo di = Directory.CreateDirectory(targetPath);
+                targetPath = di.FullName;
+            }
+            catch(Exception e)
+            {
+                VRCToolsLogger.Error(e.ToString());
+                VRCToolsLogger.Info("Current cache path: " + Application.persistentDataPath);
+                return;
+            }
+
+            Func<string> funcPath = () => { return targetPath; };
+            BestHTTP.HTTPManager.RootCacheFolderProvider = funcPath;
+
+            Type httpManager = typeof(VRC.Core.ApiAvatar).Assembly.GetType("VRC.Core.BestHTTP.HTTPManager");
+            Type httpCacheService = typeof(VRC.Core.ApiAvatar).Assembly.GetType("VRC.Core.BestHTTP.Caching.HTTPCacheService");
+            httpManager.GetMethod("set_RootCacheFolderProvider", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { funcPath });
+            httpCacheService.GetMethod("set_CacheFolder", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { null });
+            httpCacheService.GetMethod("CheckSetup", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { });
+
+            VRCToolsLogger.Info("Current cache path: " + targetPath);
+
         }
 
         public void Update()
