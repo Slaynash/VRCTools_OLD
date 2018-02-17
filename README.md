@@ -15,12 +15,11 @@ Discord RichPresence:
 Favorite avatars list:
   - you can add the weared avatar to favorite by pressing CTRL+O
   - favorited avatars appear in the "Personal" list
+  - you can remove your avatars using [the website](https://vrchat.survival-machines.fr) (top left corner of the page)
 
 Change cache folder:
   - you now have a file named `vrctools_datapath.txt` in your game directory containing the cache path
-  - you can change it by hand or using [the installer](https://vrchat.survival-machines.fr/vrctools_updater.jar
-
-You can remove your avatars using [the website](https://vrchat.survival-machines.fr) (top left corner of the page)
+  - you can change it by hand or using [the installer](https://vrchat.survival-machines.fr/vrctools_updater.jar)
 
 Planned features:
 ---
