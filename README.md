@@ -12,15 +12,20 @@ Discord RichPresence:
   - world type (public/friends+/friends/invite/invite+)
   - users and max users in instance
 
-Favorite avatars list
+Favorite avatars list:
   - you can add the weared avatar to favorite by pressing CTRL+O
   - favorited avatars appear in the "Personal" list
+
+Change cache folder:
+  - you now have a file named `vrctools_datapath.txt` in your game directory containing the cache path
+  - you can change it by hand or using [the installer](https://vrchat.survival-machines.fr/vrctools_updater.jar
+
+You can remove your avatars using [the website](https://vrchat.survival-machines.fr) (top left corner of the page)
 
 Planned features:
 ---
 - Remove favorited avatars by pressing CTRL+P
 - Separated favorite list
-- A way to change cache folder
 
 Maybe future features:
 ---
@@ -36,7 +41,7 @@ Installation
 ---
 
 Before install:
-- **Tupper (from VRChat Team) said that any modification of the game can lead to a ban**
+- **Tupper (from VRChat Team) said that any modification of the game can lead to a ban, as with this mod**
 - You need to know that this program has not been validated by the VRChat team
 - Make sure VRCTools is running the same version as the game (0.12.0p12 Build 507)
 - DLL_DIR directory is located at YOUR_GAME_FOLDER/VRChat_Data/Managed
