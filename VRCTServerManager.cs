@@ -56,7 +56,7 @@ namespace VRCTools
             VRCToolsLogger.Info(received);
 
             VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
-            if(response.returncode != (int)ReturnCodes.SUCCESS)
+            if(response.returncode != ReturnCodes.SUCCESS)
             {
                 VRCToolsLogger.Error("Unable to get avatars: error code " + response.returncode);
                 return avatars;
@@ -70,6 +70,26 @@ namespace VRCTools
             }
 
             return avatars;
+        }
+
+        internal static void ShowMOTD()
+        {
+            if (!Init()) return;
+
+            VRCTRequest request = new VRCTRequest("GETMOTD", "");
+            Send(request.AsJson());
+            String received = Receive();
+            VRCToolsLogger.Info(received);
+
+            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
+            if (response.returncode == ReturnCodes.SUCCESS)
+            {
+                string[] motdLines = response.data.Split(new string[]{"<br />"}, StringSplitOptions.None);
+                foreach(string line in motdLines){
+                    VRCToolsMainComponent.MessageGUI(Color.white, line, 20);
+                }
+            }
+
         }
 
         private static void Send(String text)
