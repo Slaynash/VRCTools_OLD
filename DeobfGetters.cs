@@ -10,7 +10,7 @@ namespace VRCTools
 
         public static bool IsVRLaunched()
         {
-            return VRCApplicationSetup.BKJMAKBMBOI;
+            return VRCTrackingManager.IsInVRMode();
         }
 
         public static QuickMenu GetQuickMenu_Instance()
