@@ -102,11 +102,18 @@ namespace VRCTools
 
         private static string Receive()
         {
-            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-            int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-            string text = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-            VRCToolsLogger.Info("<<< " + text);
-            return text;
+            String r = "";
+            while (true)
+            {
+                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                string text = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                r += text;
+                if (text.EndsWith("\n")) break;
+                else VRCToolsLogger.Info("response not ending with \\n, continuing reception...");
+            }
+            VRCToolsLogger.Info("<<< " + r);
+            return r;
         }
 
         public static int AddAvatar(ApiAvatar apiAvatar)
