@@ -52,6 +52,7 @@ namespace VRCTools
             dic.Add("version", version);
             dic.Add("unityPackageUrl", unityPackageUrl);
             dic.Add("thumbnailImageUrl", thumbnailImageUrl);
+            dic.Add("releaseStatus", "public");
 
             return dic;
         }
