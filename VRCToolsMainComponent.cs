@@ -8,7 +8,7 @@ using UnityEngine;
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour
     {
-        public static string VRCToolsVersion = "180224-0121";
+        public static string VRCToolsVersion = "180224-0444";
         public static string GAMEVERSION = "0.12.0p13:522";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
