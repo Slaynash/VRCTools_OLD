@@ -11,6 +11,7 @@ namespace VRCTools
         public string username;
         public string type;
         public string data;
+        public string modversion;
 
         public VRCTRequest(string type, string data)
         {
@@ -25,6 +26,7 @@ namespace VRCTools
                 this.uuid = "usr_none";
                 this.username = "<none>";
             }
+            this.modversion = VRCToolsMainComponent.VRCToolsVersion;
             this.type = type;
             this.data = data;
         }
