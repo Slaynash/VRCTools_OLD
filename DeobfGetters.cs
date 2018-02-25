@@ -15,17 +15,17 @@ namespace VRCTools
 
         public static QuickMenu GetQuickMenu_Instance()
         {
-            return QuickMenu.DPGALOPNLPK;
+            return QuickMenu.MAPKPPNKIDJ;
         }
 
-        public static GKGODKNLLII getCurrentUser()
+        public static CFKHOIICONP getCurrentUser()
         {
-            return GKGODKNLLII.OJMCLCBFEJA;
+            return CFKHOIICONP.PCKIBIBJEMO;
         }
 
         public static ApiAvatar getApiAvatar()
         {
-            return getCurrentUser().AODNBKMGEOL;
+            return getCurrentUser().IEPDIGCICNL;
         }
 
         internal static UiAvatarList[] GetAvatarLists(PageAvatar pageAvatar)
