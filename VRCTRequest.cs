@@ -15,7 +15,7 @@ namespace VRCTools
 
         public VRCTRequest(string type, string data)
         {
-            CFKHOIICONP cu = DeobfGetters.getCurrentUser();
+            MBDNKANECLL cu = DeobfGetters.getCurrentUser();
             if (cu != null)
             {
                 this.uuid = cu.id;
