@@ -11,7 +11,7 @@ namespace VRCTools
 {
     class VRCTServerManager
     {
-        private const string SERVER_IP = "survival-machines.fr";
+        private const string SERVER_IP = "vrchat.survival-machines.fr";
         //private const string SERVER_IP = "127.0.0.1"; // DEBUG
         private const int PORT_NO = 26341;
 
@@ -155,7 +155,7 @@ namespace VRCTools
             VRCToolsLogger.Info(received);
 
             VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
-            if (response.data != VRCToolsMainComponent.VERSION)
+            if (response.returncode != ReturnCodes.WAITING_FOR_UPDATE && response.data != VRCToolsMainComponent.VERSION)
             {
                 VRCToolsLogger.Warn("Using older version: " + VRCToolsMainComponent.VERSION + " / " + response.data);
                 badVersion = true;

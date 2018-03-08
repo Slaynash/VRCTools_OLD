@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 using VRC;
 using VRC.Core;
@@ -136,9 +137,13 @@ namespace VRCTools
                 new Type[] {typeof(string), typeof(HTTPMethods), typeof(Dictionary<string, string>), typeof(Action<string>), typeof(Action<Dictionary<string, object>>), typeof(Action<List<object>>), typeof(Action<string>), typeof(bool), typeof(bool), typeof(float) },
                 null
             );
+
             Action<List<object>> sc = new Action<List<object>>((list) => {
-                list.AddRange(VRCTServerManager.GetAvatars());
-                successCallback(list);
+                Thread t = new Thread(new ThreadStart(() => {
+                    list.AddRange(VRCTServerManager.GetAvatars());
+                    successCallback(list);
+                }));
+                t.Start();
             });
             Action<string> ec = new Action<string>((error) => {
                 errorCallback(error);
