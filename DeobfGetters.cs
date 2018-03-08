@@ -15,22 +15,22 @@ namespace VRCTools
 
         public static QuickMenu GetQuickMenu_Instance()
         {
-            return QuickMenu.CEKMPCFIBPA;
+            return QuickMenu.FHABPAILCFM;
         }
 
-        public static MBDNKANECLL getCurrentUser()
+        public static EKAIFCIHIMG getCurrentUser()
         {
-            return MBDNKANECLL.LIIMDKIGGEL;
+            return EKAIFCIHIMG.GLLFBDBLPMC;
         }
 
         public static ApiAvatar getApiAvatar()
         {
-            return getCurrentUser().NGPCNDGMODN;
+            return getCurrentUser().ODDGOOOAGHM;
         }
 
         internal static UiAvatarList[] GetAvatarLists(PageAvatar pageAvatar)
         {
-            FieldInfo field = typeof(PageAvatar).GetField("DPJAONNNEDL", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = typeof(PageAvatar).GetField("IDPPBNCJENI", BindingFlags.NonPublic | BindingFlags.Instance);
             if(field == null)
             {
                 VRCToolsLogger.Error("AvatarList field is null !");
@@ -41,7 +41,7 @@ namespace VRCTools
 
         internal static void SetAvatarLists(PageAvatar pageAvatar, UiAvatarList[] tmpList)
         {
-            typeof(PageAvatar).GetField("DPJAONNNEDL", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(pageAvatar, tmpList);
+            typeof(PageAvatar).GetField("IDPPBNCJENI", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(pageAvatar, tmpList);
         }
     }
 }
