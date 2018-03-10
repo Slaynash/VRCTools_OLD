@@ -13,6 +13,7 @@ namespace VRCTools
 {
     public abstract class AvatarUtils
     {
+        private static Action cb = null;
 
         public static void Init() { }
 
@@ -20,6 +21,15 @@ namespace VRCTools
         {
             try
             {
+                lock (cb)
+                {
+                    if(cb != null)
+                    {
+                        cb();
+                        cb = null;
+                    }
+                }
+
                 if (PlayerManager.GetCurrentPlayer() == null) return;
                 VRCPlayer vrcPlayer1 = PlayerManager.GetCurrentPlayer().vrcPlayer;
 
@@ -141,7 +151,10 @@ namespace VRCTools
             Action<List<object>> sc = new Action<List<object>>((list) => {
                 Thread t = new Thread(new ThreadStart(() => {
                     list.AddRange(VRCTServerManager.GetAvatars());
-                    successCallback(list);
+                    cb = new Action(() => {
+                        successCallback(list);
+                    });
+                    
                 }));
                 t.Start();
             });
