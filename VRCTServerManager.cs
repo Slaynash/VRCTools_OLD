@@ -136,7 +136,7 @@ namespace VRCTools
 
             Send(new VRCTRequest("ADD", avatar.AsJson()).AsJson());
             VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
-            if (response.returncode != ReturnCodes.SUCCESS)
+            if (response.returncode != ReturnCodes.SUCCESS && response.returncode != ReturnCodes.AVATAR_ALREADY_IN_FAV)
             {
                 VRCToolsLogger.Error("Unable to add avatar to favorites: error " + response.returncode);
                 return response.returncode;
