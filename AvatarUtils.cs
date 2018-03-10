@@ -13,7 +13,7 @@ namespace VRCTools
 {
     public abstract class AvatarUtils
     {
-        private static Action cb = null;
+        private static List<Action> cb = new List<Action>();
 
         public static void Init() { }
 
@@ -23,53 +23,60 @@ namespace VRCTools
             {
                 lock (cb)
                 {
-                    if(cb != null)
+                    foreach(Action a in cb)
                     {
-                        cb();
-                        cb = null;
+                        a();
                     }
+                    cb.Clear();
                 }
 
-                if (PlayerManager.GetCurrentPlayer() == null) return;
-                VRCPlayer vrcPlayer1 = PlayerManager.GetCurrentPlayer().vrcPlayer;
-
-                if (DeobfGetters.GetQuickMenu_Instance() == null) return;
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.O))
                 {
-                    ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
-                    if (apiAvatar1 == null)
-                    {
-                        VRCToolsLogger.Error("Your avatar couldn't be retrieved. Maybe your Assembly-CSharp.dll is in the wrong version ?");
-                        return;
-                    }
-                    Boolean f = false;
-                    if(apiAvatar1.releaseStatus != "public")
-                    {
-                        VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public !" + apiAvatar1.name, 3);
-                    }
-                    foreach (String s in apiAvatar1.tags) if (s == "favorite") { f = true; break; }
-                    if (!f)
-                    {
-                        VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
-                        VRCToolsLogger.Info("Description: " + apiAvatar1.description);
 
-                        int rc = VRCTServerManager.AddAvatar(apiAvatar1);
-                        if(rc == ReturnCodes.SUCCESS)
-                        {
-                            apiAvatar1.tags.Add("favorite");
-                            VRCToolsMainComponent.MessageGUI(Color.green, "Successfully favorited avatar " + apiAvatar1.name, 3);
-                        }
-                        else if(rc == ReturnCodes.AVATAR_ALREADY_IN_FAV)
-                        {
-                            apiAvatar1.tags.Add("favorite");
-                            VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
-                        }
-                        else VRCToolsMainComponent.MessageGUI(Color.red, "Unable to favorite avatar (error "+rc+"): " + apiAvatar1.name, 3);
+                    if (PlayerManager.GetCurrentPlayer() == null)
+                    {
+                        VRCToolsLogger.Info("Unable to get current player");
+                        VRCToolsMainComponent.MessageGUI(Color.red, "Unable to get current player", 3);
                     }
                     else
                     {
-                        VRCToolsLogger.Info("This avatar is already in favorite list");
-                        VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
+                        VRCPlayer vrcPlayer1 = PlayerManager.GetCurrentPlayer().vrcPlayer;
+
+                        ApiAvatar apiAvatar1 = DeobfGetters.getApiAvatar();
+                        if (apiAvatar1 == null)
+                        {
+                            VRCToolsLogger.Error("Your avatar couldn't be retrieved. Maybe your Assembly-CSharp.dll is in the wrong version ?");
+                            return;
+                        }
+                        Boolean f = false;
+                        if (apiAvatar1.releaseStatus != "public")
+                        {
+                            VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public !" + apiAvatar1.name, 3);
+                        }
+                        foreach (String s in apiAvatar1.tags) if (s == "favorite") { f = true; break; }
+                        if (!f)
+                        {
+                            VRCToolsLogger.Info("Adding avatar to favorite: " + apiAvatar1.name);
+                            VRCToolsLogger.Info("Description: " + apiAvatar1.description);
+
+                            int rc = VRCTServerManager.AddAvatar(apiAvatar1);
+                            if (rc == ReturnCodes.SUCCESS)
+                            {
+                                apiAvatar1.tags.Add("favorite");
+                                VRCToolsMainComponent.MessageGUI(Color.green, "Successfully favorited avatar " + apiAvatar1.name, 3);
+                            }
+                            else if (rc == ReturnCodes.AVATAR_ALREADY_IN_FAV)
+                            {
+                                apiAvatar1.tags.Add("favorite");
+                                VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
+                            }
+                            else VRCToolsMainComponent.MessageGUI(Color.red, "Unable to favorite avatar (error " + rc + "): " + apiAvatar1.name, 3);
+                        }
+                        else
+                        {
+                            VRCToolsLogger.Info("This avatar is already in favorite list");
+                            VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
+                        }
                     }
                 }
                 /* (debug)
@@ -129,7 +136,7 @@ namespace VRCTools
 
             }
             catch (Exception e) {
-                Console.WriteLine(e);
+                VRCToolsLogger.Error(e.ToString());
             }
         }
 
@@ -151,9 +158,15 @@ namespace VRCTools
             Action<List<object>> sc = new Action<List<object>>((list) => {
                 Thread t = new Thread(new ThreadStart(() => {
                     list.AddRange(VRCTServerManager.GetAvatars());
-                    cb = new Action(() => {
-                        successCallback(list);
-                    });
+
+                    lock (cb)
+                    {
+                        cb.Add(
+                            new Action(() => {
+                                successCallback(list);
+                            })
+                        );
+                    }
                     
                 }));
                 t.Start();
