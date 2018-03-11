@@ -10,5 +10,7 @@
         public const int ERROR_NOT_HANDLED = 5;
         public const int AVATAR_ALREADY_IN_FAV = 6;
         public const int WAITING_FOR_UPDATE = 7;
+        public const int BANNED_ADDRESS = 8;
+        public const int BANNED_ACCOUNT = 9;
     }
 }
