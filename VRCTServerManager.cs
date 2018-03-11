@@ -42,6 +42,57 @@ namespace VRCTools
             return true;
         }
 
+        private static void Send(String request)
+        {
+            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(request + "\n");
+            nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+            nwStream.Flush();
+            VRCToolsLogger.Info(">>> " + request);
+        }
+
+        private static string Receive()
+        {
+            String r = "";
+            while (true)
+            {
+                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                string text = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                r += text;
+                if (text.EndsWith("\n")) break;
+                else VRCToolsLogger.Info("response not ending with \\n, continuing reception...");
+            }
+            VRCToolsLogger.Info("<<< " + r);
+            return r;
+        }
+
+        private static VRCTResponse RequestSync(String request)
+        {
+            Send(request);
+            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
+            if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
+            {
+                VRCToolsLogger.Warn("Request rejected: Account banned (" + response.data + ")");
+                VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Account banned (" + response.data + ")", 3);
+            }
+            else if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
+            {
+                VRCToolsLogger.Warn("Request rejected: Address banned (" + response.data + ")");
+                VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Address banned (" + response.data + ")", 3);
+            }
+            return response;
+        }
+
+
+
+
+
+
+
+
+
+
+
         public static List<object> GetAvatars()
         {
             List<object> avatars = new List<object>();
@@ -51,14 +102,12 @@ namespace VRCTools
             if(!Init()) return avatars;
 
             VRCTRequest request = new VRCTRequest("GET", "");
-            Send(request.AsJson());
-            String received = Receive();
-            VRCToolsLogger.Info(received);
 
-            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
-            if(response.returncode != ReturnCodes.SUCCESS)
+            VRCTResponse response = RequestSync(request.AsJson());
+            if (response.returncode != ReturnCodes.SUCCESS)
             {
-                VRCToolsLogger.Error("Unable to get avatars: error code " + response.returncode);
+                if (response.returncode != ReturnCodes.BANNED_ACCOUNT && response.returncode != ReturnCodes.BANNED_ADDRESS)
+                    VRCToolsLogger.Error("Unable to get avatars: error code " + response.returncode);
                 return avatars;
             }
 
@@ -77,11 +126,8 @@ namespace VRCTools
             if (!Init()) return;
 
             VRCTRequest request = new VRCTRequest("GETMOTD", "");
-            Send(request.AsJson());
-            String received = Receive();
-            VRCToolsLogger.Info(received);
 
-            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
+            VRCTResponse response = RequestSync(request.AsJson());
             if (response.returncode == ReturnCodes.SUCCESS)
             {
                 string[] motdLines = response.data.Split(new string[]{"<br />"}, StringSplitOptions.None);
@@ -90,30 +136,6 @@ namespace VRCTools
                 }
             }
 
-        }
-
-        private static void Send(String text)
-        {
-            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(text+"\n");
-            nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-            nwStream.Flush();
-            VRCToolsLogger.Info(">>> " + text);
-        }
-
-        private static string Receive()
-        {
-            String r = "";
-            while (true)
-            {
-                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                string text = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                r += text;
-                if (text.EndsWith("\n")) break;
-                else VRCToolsLogger.Info("response not ending with \\n, continuing reception...");
-            }
-            VRCToolsLogger.Info("<<< " + r);
-            return r;
         }
 
         public static int AddAvatar(ApiAvatar apiAvatar)
@@ -134,11 +156,12 @@ namespace VRCTools
                 apiAvatar.thumbnailImageUrl
             );
 
-            Send(new VRCTRequest("ADD", avatar.AsJson()).AsJson());
-            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
+            
+            VRCTResponse response = RequestSync(new VRCTRequest("ADD", avatar.AsJson()).AsJson());
             if (response.returncode != ReturnCodes.SUCCESS && response.returncode != ReturnCodes.AVATAR_ALREADY_IN_FAV)
             {
-                VRCToolsLogger.Error("Unable to add avatar to favorites: error " + response.returncode);
+                if(response.returncode != ReturnCodes.BANNED_ADDRESS && response.returncode != ReturnCodes.BANNED_ACCOUNT)
+                    VRCToolsLogger.Error("Unable to add avatar to favorites: error " + response.returncode);
                 return response.returncode;
             }
             VRCToolsLogger.Info("Avatar added to favorites sucessfully");
@@ -150,16 +173,15 @@ namespace VRCTools
             if (!Init()) return VRCToolsMainComponent.VERSION;
 
             VRCTRequest request = new VRCTRequest("GETVERSION", "");
-            Send(request.AsJson());
-            String received = Receive();
-            VRCToolsLogger.Info(received);
 
-            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(received);
+            VRCTResponse response = RequestSync(request.AsJson());
             if (response.returncode != ReturnCodes.WAITING_FOR_UPDATE && response.data != VRCToolsMainComponent.VERSION)
             {
-                VRCToolsLogger.Warn("Using older version: " + VRCToolsMainComponent.VERSION + " / " + response.data);
-                badVersion = true;
-                //System.Windows.Forms.MessageBox.Show("Warning: you are not using the lastest version of the mod. Please update to avoid weird bugs");
+                if (response.returncode != ReturnCodes.BANNED_ADDRESS && response.returncode != ReturnCodes.BANNED_ACCOUNT)
+                {
+                    VRCToolsLogger.Warn("Using older version: " + VRCToolsMainComponent.VERSION + " / " + response.data);
+                    badVersion = true;
+                }
             }
             return response.data;
         }

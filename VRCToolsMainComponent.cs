@@ -8,7 +8,7 @@ using UnityEngine;
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour
     {
-        public static string VRCToolsVersion = "180310-2354";
+        public static string VRCToolsVersion = "180311-1231";
         public static string GAMEVERSION = "0.12.0p16:532";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
@@ -27,7 +27,7 @@ namespace VRCTools {
             VRCTServerManager.Init();
             VRCTServerManager.GetLastestVersion();
 
-            VRCToolsLogger.Init(true);
+            VRCToolsLogger.Init(false);
             ChangeCacheFolder();
             //VRCToolsLogger.Info("Game download path: " + Application.persistentDataPath);
 
