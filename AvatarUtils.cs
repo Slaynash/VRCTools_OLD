@@ -53,7 +53,7 @@ namespace VRCTools
                         Boolean f = false;
                         if (apiAvatar1.releaseStatus != "public")
                         {
-                            VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public !" + apiAvatar1.name, 3);
+                            VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public ! (" + apiAvatar1.name+")", 3);
                         }
                         foreach (String s in apiAvatar1.tags) if (s == "favorite") { f = true; break; }
                         if (!f)
@@ -71,6 +71,11 @@ namespace VRCTools
                             {
                                 apiAvatar1.tags.Add("favorite");
                                 VRCToolsMainComponent.MessageGUI(Color.yellow, "Already in favorite list: " + apiAvatar1.name, 3);
+                            }
+                            else if (rc == ReturnCodes.AVATAR_PRIVATE)
+                            {
+                                apiAvatar1.tags.Add("favorite");
+                                VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public ! (" + apiAvatar1.name + ")", 3);
                             }
                             else VRCToolsMainComponent.MessageGUI(Color.red, "Unable to favorite avatar (error " + rc + "): " + apiAvatar1.name, 3);
                         }
