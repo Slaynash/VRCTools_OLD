@@ -21,6 +21,8 @@ namespace VRCTools
         private static bool badVersion = false;
         private static bool hiddenBadVersion = false;
 
+        private static object requestLocker = new object();
+
         public static bool Init()
         {
             if (client == null || !client.Connected)
@@ -41,7 +43,7 @@ namespace VRCTools
             }
             return true;
         }
-
+        /*
         private static void Send(String request)
         {
             byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(request + "\n");
@@ -65,22 +67,45 @@ namespace VRCTools
             VRCToolsLogger.Info("<<< " + r);
             return r;
         }
-
+        */
         private static VRCTResponse RequestSync(String request)
         {
-            Send(request);
-            VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
-            if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
+            lock (requestLocker)
             {
-                VRCToolsLogger.Warn("Request rejected: Account banned (" + response.data + ")");
-                VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Account banned (" + response.data + ")", 3);
+                //Send(request);
+                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(request + "\n");
+                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                nwStream.Flush();
+                VRCToolsLogger.Info(">>> " + request);
+
+
+                //VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(Receive());
+                String r = "";
+                while (true)
+                {
+                    byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+                    int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                    string text = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    r += text;
+                    if (text.EndsWith("\n")) break;
+                    else VRCToolsLogger.Info("response not ending with \\n, continuing reception...");
+                }
+                VRCToolsLogger.Info("<<< " + r);
+                VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(r);
+
+
+                if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
+                {
+                    VRCToolsLogger.Warn("Request rejected: Account banned (" + response.data + ")");
+                    VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Account banned (" + response.data + ")", 3);
+                }
+                else if (response.returncode == ReturnCodes.BANNED_ADDRESS)
+                {
+                    VRCToolsLogger.Warn("Request rejected: Address banned (" + response.data + ")");
+                    VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Address banned (" + response.data + ")", 3);
+                }
+                return response;
             }
-            else if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
-            {
-                VRCToolsLogger.Warn("Request rejected: Address banned (" + response.data + ")");
-                VRCToolsMainComponent.MessageGUI(Color.red, "Request rejected: Address banned (" + response.data + ")", 3);
-            }
-            return response;
         }
 
 

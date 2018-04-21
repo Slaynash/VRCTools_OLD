@@ -18,6 +18,54 @@ namespace VRCTools
             return QuickMenu.FHABPAILCFM;
         }
 
+        public static bool QuickMenu_visible()
+        {
+            Object r = typeof(QuickMenu).GetField("INCKMBKPDGE", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+            if (r == null) return false;
+            return (bool)r;
+        }
+
+        public static bool QuickMenu_rightHand()
+        {
+            Object r = typeof(QuickMenu).GetField("FOAMDBLKDOL", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+            if (r == null) return false;
+            return (bool)r;
+        }
+
+        public static UnityEngine.Vector3 QuickMenu_hmdMenuPositionL()
+        {
+            return (UnityEngine.Vector3) typeof(QuickMenu).GetField("AELKLFHFOLB", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+        }
+
+        public static UnityEngine.Vector3 QuickMenu_hmdMenuPositionR()
+        {
+            return (UnityEngine.Vector3) typeof(QuickMenu).GetField("EOKGMCOCMJI", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+        }
+
+        public static UnityEngine.Vector3 QuickMenu_hmdMenuRotationL()
+        {
+            return (UnityEngine.Vector3)typeof(QuickMenu).GetField("EDAJOGOEFGB", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+        }
+
+        public static UnityEngine.Vector3 QuickMenu_hmdMenuRotationR()
+        {
+            return (UnityEngine.Vector3)typeof(QuickMenu).GetField("PBBIKKKGNOE", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+        }
+
+        public static bool QuickMenu_hmd()
+        {
+            Object r = typeof(QuickMenu).GetField("KGGOGOMMJPL", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+            if (r == null) return false;
+            return (bool)r;
+        }
+
+        public static bool inMainMenu()
+        {
+            Object r = typeof(QuickMenu).GetField("ACADABDAMJG", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
+            if (r == null) return false;
+            return (bool)r;
+        }
+
         public static EKAIFCIHIMG getCurrentUser()
         {
             return EKAIFCIHIMG.GLLFBDBLPMC;
