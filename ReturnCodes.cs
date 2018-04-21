@@ -12,5 +12,6 @@
         public const int WAITING_FOR_UPDATE = 7;
         public const int BANNED_ADDRESS = 8;
         public const int BANNED_ACCOUNT = 9;
+        public const int AVATAR_PRIVATE = 10;
     }
 }
