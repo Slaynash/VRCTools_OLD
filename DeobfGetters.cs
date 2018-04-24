@@ -15,9 +15,9 @@ namespace VRCTools
 
         public static QuickMenu GetQuickMenu_Instance()
         {
-            return QuickMenu.FHABPAILCFM;
+            return QuickMenu.BBGLHKBJFEF;
         }
-
+        /*
         public static bool QuickMenu_visible()
         {
             Object r = typeof(QuickMenu).GetField("INCKMBKPDGE", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetQuickMenu_Instance());
@@ -65,17 +65,17 @@ namespace VRCTools
             if (r == null) return false;
             return (bool)r;
         }
-
-        public static EKAIFCIHIMG getCurrentUser()
+        */
+        public static MPIGLLMNNKK getCurrentUser()
         {
-            return EKAIFCIHIMG.GLLFBDBLPMC;
+            return MPIGLLMNNKK.IIOFDDFLJII;
         }
 
         public static ApiAvatar getApiAvatar()
         {
-            return getCurrentUser().ODDGOOOAGHM;
+            return getCurrentUser().OEMEPPLEJOH;
         }
-
+        /*
         internal static UiAvatarList[] GetAvatarLists(PageAvatar pageAvatar)
         {
             FieldInfo field = typeof(PageAvatar).GetField("IDPPBNCJENI", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -91,5 +91,6 @@ namespace VRCTools
         {
             typeof(PageAvatar).GetField("IDPPBNCJENI", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(pageAvatar, tmpList);
         }
+        */
     }
 }
