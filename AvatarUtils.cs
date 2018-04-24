@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BestHTTP.JSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -15,8 +16,9 @@ namespace VRCTools
     {
         private static List<Action> cb = new List<Action>();
 
-        public static void Init() {
-            
+        public static void Init()
+        {
+
         }
 
         public static void Update()
@@ -25,7 +27,7 @@ namespace VRCTools
             {
                 lock (cb)
                 {
-                    foreach(Action a in cb)
+                    foreach (Action a in cb)
                     {
                         a();
                     }
@@ -53,7 +55,7 @@ namespace VRCTools
                         Boolean f = false;
                         if (apiAvatar1.releaseStatus != "public")
                         {
-                            VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public ! (" + apiAvatar1.name+")", 3);
+                            VRCToolsMainComponent.MessageGUI(Color.red, "Couldn't add avatar to list: This avatar is not public ! (" + apiAvatar1.name + ")", 3);
                         }
                         foreach (String s in apiAvatar1.tags) if (s == "favorite") { f = true; break; }
                         if (!f)
@@ -87,44 +89,169 @@ namespace VRCTools
                     }
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 VRCToolsLogger.Error(e.ToString());
             }
         }
 
-        public static void FetchFavList(string endpoint, HTTPMethods method, Dictionary<string, string> requestParams, Action<List<object>> successCallback, Action<string> errorCallback, bool needsAPIKey, bool authenticationRequired, float cacheLifetime)
+        public static void FetchFavList(string endpoint, HTTPMethods method, ApiContainer responseContainer = null, Dictionary<string, object> requestParams = null, bool needsAPIKey = true, bool authenticationRequired = true, bool disableCache = false, float cacheLifetime = 3600f)
         {
-            MethodInfo m = typeof(ApiModel).GetMethod(
-                "SendRequest",
-                BindingFlags.Static | BindingFlags.NonPublic,
+            string text = (!disableCache) ? "cyan" : "red";
+            Debug.Log(string.Concat(new object[]
+            {
+                "<color=",
+                text,
+                ">Dispatch ",
+                method,
+                " ",
+                endpoint,
+                (requestParams == null) ? string.Empty : (" params: " + Json.Encode(requestParams)),
+                " disableCache: ",
+                disableCache.ToString(),
+                "</color>"
+            }));
+
+            MethodInfo UpdateDelegatorMethod = typeof(API).Assembly.GetType("VRC.Core.UpdateDelegator").GetMethod(
+                "Dispatch",
+                BindingFlags.Static | BindingFlags.Public,
                 null,
-                new Type[] {typeof(string), typeof(HTTPMethods), typeof(Dictionary<string, string>), typeof(Action<string>), typeof(Action<Dictionary<string, object>>), typeof(Action<List<object>>), typeof(Action<string>), typeof(bool), typeof(bool), typeof(float) },
+                new Type[] { typeof(Action) },
                 null
             );
+            Action delegateAction = delegate
+            {
+                MethodInfo SendRequestInternalMethod = typeof(API).GetMethod(
+                    "SendRequestInternal",
+                    BindingFlags.Static | BindingFlags.NonPublic,
+                    null,
+                    new Type[] { typeof(string), typeof(HTTPMethods), typeof(ApiContainer), typeof(Dictionary<string, object>), typeof(bool), typeof(bool), typeof(bool), typeof(float) },
+                    null
+                );
+                if (endpoint == "avatars" && requestParams.ContainsKey("user") && requestParams["user"] == "me")
+                {
 
-            Action<List<object>> sc = new Action<List<object>>((list) => {
-                Thread t = new Thread(new ThreadStart(() => {
-                    list.AddRange(VRCTServerManager.GetAvatars());
 
-                    lock (cb)
+
+
+
+
+
+                    ApiModelListContainer<ApiAvatar> rc = new ApiModelListContainer<ApiAvatar>
                     {
-                        cb.Add(
-                            new Action(() => {
-                                successCallback(list);
-                            })
-                        );
-                    }
-                    
-                }));
-                t.Start();
-            });
-            Action<string> ec = new Action<string>((error) => {
-                errorCallback(error);
-            });
-            
-            m.Invoke(null, new object[] { "avatars", HTTPMethods.Get, requestParams, null, null, sc, ec, needsAPIKey, authenticationRequired, cacheLifetime });
+                        OnSuccess = delegate (ApiContainer c)
+                        {
+                            Thread t = new Thread(new ThreadStart(() => {
+                                List<object> avatarsFav = VRCTServerManager.GetAvatars();
 
+                                ((List<object>)c.Data).AddRange(avatarsFav);
+
+
+                                MethodInfo SetResponseModelsMethod = typeof(ApiModelListContainer<ApiAvatar>).GetMethod(
+                                   "set_ResponseModels",
+                                   BindingFlags.Instance | BindingFlags.NonPublic,
+                                   null,
+                                   new Type[] { typeof(List<ApiAvatar>) },
+                                   null
+                                );
+
+                                String responseError = "";
+
+                                SetResponseModelsMethod.Invoke(c, new object[] { API.ConvertJsonListToModelList<ApiAvatar>((List<object>)c.Data, ref responseError, c.DataTimestamp) });
+                                
+
+                                lock (cb)
+                                {
+                                    cb.Add(
+                                        new Action(() => {
+                                            responseContainer.OnSuccess(c);
+                                        })
+                                    );
+                                }
+
+                            }));
+                            t.Start();
+                        },
+                        OnError = delegate (ApiContainer c)
+                        {
+                            responseContainer.OnError(c);
+                        }
+                    };
+                    SendRequestInternalMethod.Invoke(null, new object[] { endpoint, method, rc, requestParams, needsAPIKey, authenticationRequired, disableCache, cacheLifetime });
+
+
+
+
+
+
+                }
+                else
+                {
+                    SendRequestInternalMethod.Invoke(null, new object[] { endpoint, method, responseContainer, requestParams, needsAPIKey, authenticationRequired, disableCache, cacheLifetime });
+                }
+            };
+            UpdateDelegatorMethod.Invoke(null, new object[] { delegateAction });
         }
-        
+        /*
+        public static void FetchFavList(string endpoint, HTTPMethods method, ApiContainer responseContainer = null, Dictionary<string, object> requestParams = null, bool needsAPIKey = true, bool authenticationRequired = true, bool disableCache = false, float cacheLifetime = 3600f)
+        {
+
+            string text = (!disableCache) ? "cyan" : "red";
+            Debug.Log(string.Concat(new object[]
+            {
+                "<color=",
+                text,
+                ">Dispatch ",
+                method,
+                " ",
+                endpoint,
+                (requestParams == null) ? string.Empty : (" params: " + Json.Encode(requestParams)),
+                " disableCache: ",
+                disableCache.ToString(),
+                "</color>"
+            }));
+            UpdateDelegator.Dispatch(delegate
+            {
+                if (false && endpoint == "avatars" && requestParams.ContainsKey("user") && requestParams["user"] == "me")
+                {
+                    //*
+                    MethodInfo m = typeof(ApiModel).GetMethod(
+                        "SendRequest",
+                        BindingFlags.Static | BindingFlags.NonPublic,
+                        null,
+                        new Type[] { typeof(string), typeof(HTTPMethods), typeof(Dictionary<string, string>), typeof(Action<string>), typeof(Action<Dictionary<string, object>>), typeof(Action<List<object>>), typeof(Action<string>), typeof(bool), typeof(bool), typeof(float) },
+                        null
+                    );
+                    * /
+                    /*
+                    Action<List<object>> sc = new Action<List<object>>((list) => {
+                        Thread t = new Thread(new ThreadStart(() => {
+                            list.AddRange(VRCTServerManager.GetAvatars());
+
+                            lock (cb)
+                            {
+                                cb.Add(
+                                    new Action(() => {
+                                        successCallback(list);
+                                    })
+                                );
+                            }
+
+                        }));
+                        t.Start();
+                    });
+                    Action<string> ec = new Action<string>((error) => {
+                        errorCallback(error);
+                    });
+                    * /
+                    //m.Invoke(null, new object[] { "avatars", HTTPMethods.Get, requestParams, null, null, sc, ec, needsAPIKey, authenticationRequired, cacheLifetime });
+                }
+                else
+                {
+                    API.SendRequestInternal(endpoint, method, responseContainer, requestParams, needsAPIKey, authenticationRequired, disableCache, cacheLifetime);
+                }
+            });
+        }
+        */
     }
 }

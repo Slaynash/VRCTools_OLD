@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using VRC.Core;
-using static VRC.Core.ApiWorld.WorldInstance;
+using static VRC.Core.ApiWorldInstance;
 
 namespace VRCTools
 {
