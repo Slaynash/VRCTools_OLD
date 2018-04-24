@@ -27,7 +27,7 @@ namespace VRCTools {
             VRCTServerManager.Init();
             VRCTServerManager.GetLastestVersion();
 
-            VRCToolsLogger.Init(true);
+            VRCToolsLogger.Init(false);
             ChangeCacheFolder();
             //VRCToolsLogger.Info("Game download path: " + Application.persistentDataPath);
 
