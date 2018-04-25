@@ -34,6 +34,7 @@ namespace VRCTools
         internal string AsJson()
         {
             return JsonUtility.ToJson(this);
+            //return BestHTTP.JSON.Json.Encode(this);
         }
     }
 }

@@ -109,6 +109,7 @@ namespace VRCTools
                 }
                 VRCToolsLogger.Info("<<< " + r);
                 VRCTResponse response = JsonUtility.FromJson<VRCTResponse>(r);
+                //VRCTResponse response = BestHTTP.JSON.Json.Decode(r) as VRCTResponse;
 
 
                 if (response.returncode == ReturnCodes.BANNED_ACCOUNT)
