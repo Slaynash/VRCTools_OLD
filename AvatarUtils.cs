@@ -18,7 +18,7 @@ namespace VRCTools
 
         public static void Init()
         {
-
+            
         }
 
         public static void Update()
