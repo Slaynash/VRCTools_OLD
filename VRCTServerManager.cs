@@ -23,7 +23,24 @@ namespace VRCTools
 
         private static object requestLocker = new object();
 
-        public static bool Init()
+        public static void Init()
+        {
+            Thread th = new Thread(() => {
+                while (true)
+                {
+                    Thread.Sleep(2 * 60 * 1000);
+                    if (client == null || !client.Connected) continue;
+
+                    VRCTRequest request = new VRCTRequest("KEEPALIVE", "");
+                    RequestSync(request.AsJson());
+                }
+            });
+            th.IsBackground = true;
+            th.Name = "VRCTools keepalive";
+            th.Start();
+        }
+
+        public static bool InitConnection()
         {
             if (client == null || !client.Connected)
             {
@@ -124,7 +141,7 @@ namespace VRCTools
 
             VRCToolsLogger.Info("getAvatars");
             
-            if(!Init()) return avatars;
+            if(!InitConnection()) return avatars;
 
             VRCTRequest request = new VRCTRequest("GET", "");
 
@@ -148,7 +165,7 @@ namespace VRCTools
 
         internal static void ShowMOTD()
         {
-            if (!Init()) return;
+            if (!InitConnection()) return;
 
             VRCTRequest request = new VRCTRequest("GETMOTD", "");
 
@@ -165,7 +182,7 @@ namespace VRCTools
 
         public static int AddAvatar(ApiAvatar apiAvatar)
         {
-            if (!Init()) return -1;
+            if (!InitConnection()) return -1;
 
             SerializableApiAvatar avatar = new SerializableApiAvatar(
                 apiAvatar.id,
@@ -195,7 +212,7 @@ namespace VRCTools
 
         public static string GetLastestVersion()
         {
-            if (!Init()) return VRCToolsMainComponent.VERSION;
+            if (!InitConnection()) return VRCToolsMainComponent.VERSION;
 
             VRCTRequest request = new VRCTRequest("GETVERSION", "");
 

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour
     {
-        public static string VRCToolsVersion = "180425-0118";
+        public static string VRCToolsVersion = "180425-1243";
         public static string GAMEVERSION = "2018.1.1:553";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
@@ -25,6 +25,7 @@ namespace VRCTools {
 
             VRCToolsLogger.Info("Initialising VRCTools "+ VRCToolsVersion + " for game version "+ GAMEVERSION);
             VRCTServerManager.Init();
+            VRCTServerManager.InitConnection();
             VRCTServerManager.GetLastestVersion();
 
             VRCToolsLogger.Init(false);
