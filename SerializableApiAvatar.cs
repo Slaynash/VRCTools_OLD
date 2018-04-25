@@ -69,6 +69,7 @@ namespace VRCTools
             foreach(Match m in matches)
             {
                 saa.Add(JsonUtility.FromJson<SerializableApiAvatar>(m.Value));
+                //saa.Add(BestHTTP.JSON.Json.Decode(m.Value) as SerializableApiAvatar);
             }
             return saa;
         }
