@@ -18,7 +18,7 @@ namespace VRCTools
             presence.state = "Not in a world";
             presence.partySize = 0;
             presence.partyMax = 0;
-            presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "Desktop" : "VR") + ")";
+            presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "VR" : "Desktop") + ")";
             presence.largeImageKey = "logo";
 
             Thread t = new Thread(new ThreadStart(() => {
@@ -69,7 +69,7 @@ namespace VRCTools
                 }
                 else
                 {
-                    presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "Desktop" : "VR") + ")";
+                    presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "VR" : "Desktop") + ")";
                 }
             }
 

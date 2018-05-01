@@ -8,7 +8,7 @@ using UnityEngine;
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour
     {
-        public static string VRCToolsVersion = "180425-2315";
+        public static string VRCToolsVersion = "180501-1358";
         public static string GAMEVERSION = "2018.1.1p1:556";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
@@ -16,7 +16,7 @@ namespace VRCTools {
 
         private bool discordInit = false;
         private bool avatarInit = false;
-        
+
         private static int nbmessagelast = 0;
         private static Dictionary<int, GUIMessage> messagesList = new Dictionary<int, GUIMessage>();
 
@@ -69,7 +69,7 @@ namespace VRCTools {
                 writer.WriteLine(Application.persistentDataPath);
                 writer.Close();
             }
-            
+
             StreamReader reader = new StreamReader("vrctools_datapath.txt");
             string targetPath = reader.ReadLine();
             reader.Close();
@@ -148,14 +148,6 @@ namespace VRCTools {
             }
 
         }
-
-        /* Upcoming - DLL Injector
-        public static void LoadLibraryA()
-        {
-            UnityEngine.Debug.Log("DLLInject");
-            System.Windows.Forms.MessageBox.Show("You kiddo are going to have a bad time");
-        }
-        */
     }
 
     internal class GUIMessage

@@ -141,7 +141,7 @@ namespace VRCTools
             List<object> avatars = new List<object>();
 
             VRCToolsLogger.Info("getAvatars");
-            
+
             if(!InitConnection()) return avatars;
 
             VRCTRequest request = new VRCTRequest("GET", "");
