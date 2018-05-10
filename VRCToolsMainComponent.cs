@@ -8,8 +8,8 @@ using UnityEngine;
 namespace VRCTools {
     public class VRCToolsMainComponent : MonoBehaviour
     {
-        public static string VRCToolsVersion = "180501-1358";
-        public static string GAMEVERSION = "2018.1.1p1:556";
+        public static string VRCToolsVersion = "180510-1957";
+        public static string GAMEVERSION = "2018.1.2:557";
         public static string VERSION = VRCToolsVersion + "_" + GAMEVERSION;
 
         private static VRCToolsMainComponent instance;
@@ -19,6 +19,8 @@ namespace VRCTools {
 
         private static int nbmessagelast = 0;
         private static Dictionary<int, GUIMessage> messagesList = new Dictionary<int, GUIMessage>();
+
+        private GameObject[] cameraHelper = new GameObject[2];
 
         public void Awake() {
             instance = this;
@@ -52,12 +54,23 @@ namespace VRCTools {
                 Console.WriteLine("An error occured during the initialisation of AvatarUtils:");
                 Console.WriteLine(e);
             }
+            /*
+            try
+            {
+                InitEnhancedCamera();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occured during the initialisation of the Enhanced Camera:");
+                Console.WriteLine(e);
+            }
+            */
             DontDestroyOnLoad(this);
 
             VRCToolsLogger.Info("Initialised successfully !");
 
             MessageGUI(Color.green, "Using VRCTools " + VERSION, 8);
-            MessageGUI(Color.green, "Made By Slaynash#2879 (Discord name)", 8);
+            MessageGUI(Color.green, "Made By Slaynash", 8);
             VRCTServerManager.ShowMOTD();
         }
 
@@ -97,6 +110,81 @@ namespace VRCTools {
             VRCToolsLogger.Info("Current cache path: " + targetPath);
 
         }
+        /* Deprecated as the camera as been modified
+        private void InitEnhancedCamera()
+        {
+
+            //_Application/TrackingVolume/UserCamera/ViewFinder/PhotoCamera/Cylinder
+            //_Application/TrackingVolume/UserCamera/ViewFinder/PhotoCamera/Cylinder (1)
+            cameraHelper[0] = UserCameraController.Instance.viewFinder.transform.Find("PhotoCamera/Cylinder").gameObject;
+            cameraHelper[1] = UserCameraController.Instance.viewFinder.transform.Find("PhotoCamera/Cylinder (1)").gameObject;
+
+            // ZOOM IN
+            GameObject zoomInButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            zoomInButton.transform.SetParent(UserCameraController.Instance.viewFinder.transform);
+            zoomInButton.transform.localRotation = Quaternion.identity;
+            zoomInButton.transform.localPosition = new Vector3(-0.22f, 0, -0.045f);
+            zoomInButton.transform.localScale = new Vector3(0.03f, 0.01f, 0.03f);
+
+            zoomInButton.GetComponent<Collider>().isTrigger = true;
+            zoomInButton.GetComponent<Renderer>().material.color = Color.cyan * 0.8f;
+            //zoomInButton.layer = cameraHelper[0].layer;
+
+            VRCT_Trigger zoomInTrigger = VRCT_Trigger.CreateVRCT_Trigger(zoomInButton, () => {
+                Camera cam1 = UserCameraController.Instance.photoCamera.GetComponent<Camera>();
+                if (cam1.fieldOfView - 10 > 0) cam1.fieldOfView -= 10;
+                Camera cam2 = UserCameraController.Instance.videoCamera.GetComponent<Camera>();
+                if (cam2.fieldOfView - 10 > 0) cam2.fieldOfView -= 10;
+                UserCameraController.Instance.speaker.PlayOneShot(UserCameraController.Instance.buttonSound);
+            });
+
+            zoomInTrigger.interactText = "Zoom in";
+            zoomInTrigger.proximity = 0.4f;
+
+
+            // ZOOM OUT
+            GameObject zoomOutButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            zoomOutButton.transform.SetParent(UserCameraController.Instance.viewFinder.transform);
+            zoomOutButton.transform.localRotation = Quaternion.identity;
+            zoomOutButton.transform.localPosition = new Vector3(-0.22f, 0, 0);
+            zoomOutButton.transform.localScale = new Vector3(0.03f, 0.01f, 0.03f);
+
+            zoomOutButton.GetComponent<Collider>().isTrigger = true;
+            zoomOutButton.GetComponent<Renderer>().material.color = Color.magenta * 0.8f;
+            //zoomOutButton.layer = cameraHelper[0].layer;
+
+            VRCT_Trigger zoomOutTrigger = VRCT_Trigger.CreateVRCT_Trigger(zoomOutButton, () => {
+                Camera cam1 = UserCameraController.Instance.photoCamera.GetComponent<Camera>();
+                if (cam1.fieldOfView + 10 < 180) cam1.fieldOfView += 10;
+                Camera cam2 = UserCameraController.Instance.videoCamera.GetComponent<Camera>();
+                if (cam2.fieldOfView + 10 < 180) cam2.fieldOfView += 10;
+                UserCameraController.Instance.speaker.PlayOneShot(UserCameraController.Instance.buttonSound);
+            });
+
+            zoomOutTrigger.interactText = "Zoom out";
+            zoomOutTrigger.proximity = 0.4f;
+
+            // CAMERA HELPER
+            GameObject toggleCameraHelperButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            toggleCameraHelperButton.transform.SetParent(UserCameraController.Instance.viewFinder.transform);
+            toggleCameraHelperButton.transform.localRotation = Quaternion.identity;
+            toggleCameraHelperButton.transform.localPosition = new Vector3(-0.22f, 0, 0.045f);
+            toggleCameraHelperButton.transform.localScale = new Vector3(0.03f, 0.01f, 0.03f);
+
+            toggleCameraHelperButton.GetComponent<Collider>().isTrigger = true;
+            toggleCameraHelperButton.GetComponent<Renderer>().material.color = Color.yellow * 0.8f;
+            //toggleCameraHelperButton.layer = cameraHelper[0].layer;
+
+            VRCT_Trigger toggleCameraHelperTrigger = VRCT_Trigger.CreateVRCT_Trigger(toggleCameraHelperButton, () => {
+                cameraHelper[0].SetActive(!cameraHelper[0].activeSelf);
+                cameraHelper[1].SetActive(!cameraHelper[1].activeSelf);
+                UserCameraController.Instance.speaker.PlayOneShot(UserCameraController.Instance.buttonSound);
+            });
+
+            toggleCameraHelperTrigger.interactText = "Toggle camera helper";
+            toggleCameraHelperTrigger.proximity = 0.4f;
+        }
+        */
 
         public void Update()
         {
@@ -107,7 +195,7 @@ namespace VRCTools {
                 if (discordInit) DiscordLoader.Update();
                 if (avatarInit) AvatarUtils.Update();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 VRCToolsLogger.Error(e.ToString());
             }

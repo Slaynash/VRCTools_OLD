@@ -1,4 +1,6 @@
-﻿namespace VRCTools
+﻿using System;
+
+namespace VRCTools
 {
     class VRCTResponse
     {

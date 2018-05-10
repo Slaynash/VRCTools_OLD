@@ -65,7 +65,7 @@ namespace VRCTools
                 }
                 if (APIUser.CurrentUser != null)
                 {
-                    presence.details = "as " + APIUser.CurrentUser.displayName + " (" + (DeobfGetters.IsVRLaunched() ? "Desktop" : "VR") + ")";
+                    presence.details = "as " + APIUser.CurrentUser.displayName + " (" + (DeobfGetters.IsVRLaunched() ? "VR" : "Desktop") + ")";
                 }
                 else
                 {
