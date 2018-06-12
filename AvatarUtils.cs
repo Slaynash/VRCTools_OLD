@@ -98,7 +98,7 @@ namespace VRCTools
         public static void FetchFavList(string endpoint, HTTPMethods method, ApiContainer responseContainer = null, Dictionary<string, object> requestParams = null, bool needsAPIKey = true, bool authenticationRequired = true, bool disableCache = false, float cacheLifetime = 3600f)
         {
             string text = (!disableCache) ? "cyan" : "red";
-            Debug.Log(string.Concat(new object[]
+            VRC.Core.Logger.Log(string.Concat(new object[]
             {
                 "<color=",
                 text,
@@ -110,7 +110,7 @@ namespace VRCTools
                 " disableCache: ",
                 disableCache.ToString(),
                 "</color>"
-            }));
+            }), DebugLevel.API);
 
             MethodInfo UpdateDelegatorMethod = typeof(API).Assembly.GetType("VRC.Core.UpdateDelegator").GetMethod(
                 "Dispatch",

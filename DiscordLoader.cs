@@ -50,7 +50,7 @@ namespace VRCTools
                     if (world.currentInstanceAccess == AccessType.InviteOnly || world.currentInstanceAccess == AccessType.InvitePlus)
                         presence.state = "in a private world";
                     else
-                        presence.state = "in " + world.name + (
+                        presence.state = "in " + world.name + " " + (
                             world.currentInstanceAccess == AccessType.FriendsOfGuests ? "[Friends+]" :
                             world.currentInstanceAccess == AccessType.FriendsOnly ? "[Friends]" :
                             world.currentInstanceAccess == AccessType.InviteOnly ? "[private]" :
