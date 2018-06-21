@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using UnityEngine;
 using VRC.Core;
 using static VRC.Core.ApiWorldInstance;
 
@@ -20,6 +21,7 @@ namespace VRCTools
             presence.partyMax = 0;
             presence.details = "Not logged in" + " (" + (DeobfGetters.IsVRLaunched() ? "VR" : "Desktop") + ")";
             presence.largeImageKey = "logo";
+            presence.partyId = "";
 
             Thread t = new Thread(new ThreadStart(() => {
 
@@ -48,20 +50,26 @@ namespace VRCTools
                 if (world != null)
                 {
                     if (world.currentInstanceAccess == AccessType.InviteOnly || world.currentInstanceAccess == AccessType.InvitePlus)
+                    {
                         presence.state = "in a private world";
+                        presence.partyId = "";
+                    }
                     else
+                    {
                         presence.state = "in " + world.name + " " + (
                             world.currentInstanceAccess == AccessType.FriendsOfGuests ? "[Friends+]" :
                             world.currentInstanceAccess == AccessType.FriendsOnly ? "[Friends]" :
-                            world.currentInstanceAccess == AccessType.InviteOnly ? "[private]" :
-                            world.currentInstanceAccess == AccessType.InvitePlus ? "[private]" :
                             world.currentInstanceAccess == AccessType.Public ? "" :
                             "[Unknown]"
                         );
+                        presence.partyId = world.currentInstanceIdOnly;
+                        VRCToolsLogger.Info("WorldInstanceId: " + world.currentInstanceIdOnly);
+                    }
                 }
                 else
                 {
                     presence.state = "Not in a world";
+                    presence.partyId = "";
                 }
                 if (APIUser.CurrentUser != null)
                 {
