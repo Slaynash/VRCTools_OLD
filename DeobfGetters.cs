@@ -15,7 +15,7 @@ namespace VRCTools
 
         public static QuickMenu GetQuickMenu_Instance()
         {
-            return QuickMenu.MONCFBFMAEP;
+            return QuickMenu.MJHBDBDBLIL;
         }
         /*
         public static bool QuickMenu_visible()
@@ -66,14 +66,14 @@ namespace VRCTools
             return (bool)r;
         }
         */
-        public static NOMHABAMJPB getCurrentUser()
+        public static LNMIKJDOJDA getCurrentUser()
         {
-            return NOMHABAMJPB.OMNKLDBDLHA;
+            return LNMIKJDOJDA.FDGKHIKOBFF;
         }
 
         public static ApiAvatar getApiAvatar()
         {
-            return getCurrentUser().FJDNDIBFMJO;
+            return getCurrentUser().HEDLPMLLHDA;
         }
         /*
         internal static UiAvatarList[] GetAvatarLists(PageAvatar pageAvatar)
