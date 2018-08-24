@@ -1,6 +1,12 @@
 # VRCTools
 This is a mod of VRChat to add some of the requested features to VRChat
 
+**<span style="color:red">
+This version is deprecated !<br>
+The new version is automatically installed by [VRCModLoader](https://github.com/Slaynash/VRCModLoader), and can be found [here](https://github.com/Slaynash/VRCTools).<br>
+Also the "Favoite avatar" part is now the [AvatarFav Mod](https://github.com/Slaynash/AvatarFav).
+</span>**
+
 **Don't forget to take a look at [the website](https://vrchat.survival-machines.fr) ! :wink:**
 
 Current features:
